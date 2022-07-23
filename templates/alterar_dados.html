@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Alterar dados{% endblock %}
+{% block content %}
+    <h1>Alterar dados</h1>
+    <form onsubmit="return false">
+    <div>
+        <input type="text" id="nome_update" name="email" placeholder="Email:" value="sofia_alterado">
+        <button id="atualizar_nome">Alterar Nome</button>
+    </div>
+    <div>
+        <input type="email" id="email-update" name="email" placeholder="Email:" value="email@alterado">
+        <button id="atualizar_email">Alterar Email</button>
+    </div>
+    <div>
+        <input type="password" id="senha-update" name="senha" placeholder="Senha:" value="12345678">
+        <button id="atualizar_senha">Alterar Senha</button>
+    </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static',filename='js/prof.js')}}" type="text/javascript"></script>
+{% endblock %}

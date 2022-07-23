@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Cadastro Turma{% endblock %}
+{% block content %}
+<h1>Cadastro Turma</h1>
+<form onsubmit="return false">
+	<div>
+	<input type="text" name="nomeTurma" id="campoNomeTurma" required autofocus placeholder="Nome da Turma" value="301 info"><br>
+	</div>
+	<div>
+	<textarea name="alunos" id="campoAlunos" placeholder="Lista de alunos:"></textarea><br>
+	</div>
+	<button id="btCadastrarTurma"  type="submit" >Cadastrar</button>
+</form>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static',filename='js/turma.js')}}" type="text/javascript"></script>
+{% endblock %}

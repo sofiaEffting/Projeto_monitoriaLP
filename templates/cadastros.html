@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Cadastros{% endblock %}
+{% block content %}
+
+	<input type="text" name="name" id="campoNome" required autofocus placeholder="Nome:" value="hylson"><br>
+	<input type="email" name="email" id="campoEmail" required placeholder="Email:" value="hvesocvi@gmai.com"><br>
+	<input type="password" name="password" id="campoSenha" required placeholder="Senha:" value="123"><br>
+    <button id="btCadastrarPROF"  type="submit" >Cadastrar</button>
+	<br>
+	<br>
+	<input type="text" name="descricao" id="campoDescricao" required autofocus placeholder="Decrição:" value="prova"><br>
+	<input type="datetime-local" name="dataInicio" id="campoDataInicio" required placeholder="Data início:"><br>
+	<input type="datetime-local" name="dataFim" id="campoDataFim" placeholder="Data término:"><br>
+	<button id="btCadastrarAV"  type="submit" >Cadastrar</button>
+	<br>
+	<br>
+	<input type="text" name="nome" id="campoNomeTurma" required autofocus placeholder="Nome da Turma" value="301 info"><br>
+	<textarea name="alunos" id="campoAlunos" placeholder="Lista de alunos:"></textarea><br>
+	<button id="btCadastrarTurma"  type="submit" >Cadastrar</button>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Cadastro Usuário{% endblock %}
+{% block content %}
+    <form onsubmit="return false;">
+        <h1>Realize seu cadastro!</h1>
+    <div>
+        <input type="text" id="nome-cadastro" required placeholder="Nome:" value="sofia_teste">
+    </div>
+    <div>
+        <input type="email" id="email-cadastro" required placeholder="Email:" value="">
+    </div>
+    <div >
+        <input type="password" id="senha-cadastro" required placeholder="Senha:" value="12345678"><br><br>
+    </div>
+        <button id="btCadastrarPROF" type="submit">Enviar</button><br>
+        <a href="/">Já possui cadastro?</a>
+    </form>
+
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static',filename='js/prof.js')}}" type="text/javascript"></script>
+{% endblock %}
