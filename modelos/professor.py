@@ -1,4 +1,7 @@
 import os, sys
+
+from modelos.avaliacao import Avaliacao, tabela_associacao
+from modelos.turma import Turma
 currentdir = os.path.dirname(os.path.realpath(__file__)) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5/classes
 parentdir = os.path.dirname(currentdir) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5
 sys.path.append(parentdir) 
@@ -99,6 +102,7 @@ def updateNome(nome: str, email: str):
 
 def updateSenha(senha: str, email: str):
     try:
+        senha = criptografar_senha(senha)
         if Professor.query.filter(Professor.email==email).update(dict(senha=senha)):
             db.session.commit()
             return True
@@ -119,7 +123,11 @@ def updateEmail(email_atual: str, email_novo: str):
 def deleteProf(email: str):
     try: 
         if getProfessor(email) is not None:
+            id = getIdProf(email)
             Professor.query.filter(Professor.email == email).delete()
+            Avaliacao.query.filter(Avaliacao.prof_id == id).delete()
+            Turma.query.filter(Turma.prof_id == id).delete()
+            # excluir dados da tabela associação
             db.session.commit()
             return True
         return False

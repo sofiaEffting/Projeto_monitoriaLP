@@ -1,20 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Usuário{% endblock %}
+{% block title %}Excluir Avaliação{% endblock %}
 {% block content %}
-	<h1 id="nome">Bem vindo(a), </h1>
-    <br>
-    <h3>Minhas Turmas</h3>
-    <table>
-        <thead>
-            <tr>
-                <th scope="col">Nomes</th>
-            </tr>
-        </thead>
-        <tbody id="tabelaTurmasUsuario">
-        </tbody>
-    </table>
-    <br>
-    <h3>Minhas Avaliações</h3>
+
+<h3>Minhas Avaliações</h3>
     <table>
         <thead>
             <tr>
@@ -27,6 +15,7 @@
         <tbody id="corpoTabelaAvs">
         </tbody>
     </table>
+
 {% endblock %}
 {% block scripts %}
 <script src="{{url_for('static',filename='js/listar.js')}}" type="text/javascript"></script>

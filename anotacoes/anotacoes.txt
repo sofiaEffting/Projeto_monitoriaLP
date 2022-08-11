@@ -5,4 +5,4 @@ arrumar o cadastro de av (arquivos) como salvar?
 arrumar o delete turma para deletar também as avaliações que tiverem somente aquela turma , ou fazer um tratamento de erro 
 pra quando isso acontecer e manter a avaliação sem uma turma 
 
-terminar os required
+descobrir como excluir a tabela_associacao

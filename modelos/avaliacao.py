@@ -1,3 +1,4 @@
+
 import os, sys
 currentdir = os.path.dirname(os.path.realpath(__file__)) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5/classes
 parentdir = os.path.dirname(currentdir) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5
@@ -14,7 +15,7 @@ class Avaliacao(db.Model):
     dataInicio = db.Column(db.String(254), nullable=False)
     dataFim = db.Column(db.String(254))
 
-    turmas = db.relationship("Turma", secondary='tabela_associacao')
+    turmas = db.relationship("Turma", secondary='tabela_associacao', back_populates= 'avaliacoes', cascade="all, delete")
     
     prof_id = db.Column(db.Integer, db.ForeignKey('professor.id'))
     prof = db.relationship('Professor', back_populates='avaliacoes')
@@ -165,6 +166,6 @@ def cadastrarAvaliacao(desc: str, dataInicio: str, dataFim: str, turmas: list, p
         return e
 
 tabela_associacao  = db.Table('tabela_associacao', db.metadata, 
-    db.Column('turma.id', db.Integer, db.ForeignKey(Turma.id), primary_key=True),
-    db.Column('Avaliacao.id', db.Integer, db.ForeignKey(Avaliacao.id), primary_key=True)
+    db.Column('turma.id', db.Integer, db.ForeignKey(Turma.id, ondelete='CASCADE'), primary_key=True),
+    db.Column('Avaliacao.id', db.Integer, db.ForeignKey(Avaliacao.id, ondelete='CASCADE'), primary_key=True)
     )

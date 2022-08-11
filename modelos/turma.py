@@ -4,7 +4,6 @@ parentdir = os.path.dirname(currentdir) # /home/friend/01-github/dw2ed/fund/pyth
 sys.path.append(parentdir) 
 from config import *
 
-
 class Turma(db.Model):
     
     __tablename__ = 'turma'
@@ -13,8 +12,7 @@ class Turma(db.Model):
     alunos = db.Column(db.Text)
     prof_id = db.Column(db.Integer, db.ForeignKey('professor.id'))
     prof = db.relationship('Professor', back_populates='turmas')
-    # pq as avs não ficam aqui????
-    #avaliacoes = db.relationship('Avaliacao', secondary='tabela_associacao')
+    avaliacoes = db.relationship('Avaliacao', secondary='tabela_associacao', back_populates="turmas", cascade="all, delete")
 
     def json(self):
         return {
@@ -79,6 +77,7 @@ def delete_turma(email: str, id: int):
         turma = getTurma(id)
         if turma is not None and turma.prof.email == email:
             Turma.query.filter(id == id).delete()
+            # excluir tbm as avs que só possuem essa turma
             db.session.commit()
             return True
         return False

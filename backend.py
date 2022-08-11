@@ -6,8 +6,11 @@ from modelos.turma import *
 # USUARIO / PROFESSOR ======================================
 
 @app.route('/cadastroUsuario', methods=['POST'])
+@jwt_required()
 def cadastroUsuario():
-    dados = request.get_json()
+
+    dados = request.get_json(force=True)
+
     try:
         if cadastrarProf(**dados):
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
@@ -15,10 +18,12 @@ def cadastroUsuario():
             resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Usuário já cadastrado!'})
     except Exception as e:
         resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
+
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
 @app.route('/excluirUsuario/<email>', methods=['DELETE'])
+@jwt_required()
 def excluirUsuario(email):
     try:
         if deleteProf(email):
@@ -34,10 +39,12 @@ def excluirUsuario(email):
 # UPDATES ---------------------------------------------
 
 @app.route('/atualizar_nome', methods=['POST'])
+@jwt_required()
 def atualizar_nome():
     try:
-        dados = request.get_json()
+        dados = request.get_json(force=True)
         nome = dados['novo_nome']
+
         if updateNome(nome, dados['email']):
             resposta = jsonify({'Resultado': 'ok', 'nome': nome})
         else:
@@ -50,9 +57,10 @@ def atualizar_nome():
     return resposta
 
 @app.route('/atualizar_email', methods=['POST'])
+@jwt_required()
 def atualizar_email():
     try:
-        dados = request.get_json() 
+        dados = request.get_json(force=True) 
         email_novo = dados['novo_email']
         if updateEmail(dados['email'], email_novo):
             resposta = jsonify({'Resultado': 'ok','email':email_novo})
@@ -66,9 +74,10 @@ def atualizar_email():
     return resposta
 
 @app.route('/atualizar_senha', methods=['POST'])
+@jwt_required()
 def atualizar_senha():
     try:
-        dados = request.get_json() 
+        dados = request.get_json(force=True) 
         if updateSenha(dados['nova_senha'], dados['email']):
             resposta = jsonify({'Resultado': 'ok'})
         else:
@@ -183,7 +192,8 @@ def cadastroTurma():
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
-@app.route('/deleteTurma/<email>/<int:turma_id>', methods=['DELETE'])
+@app.route('/deleteTurma/<string:email>/<int:turma_id>', methods=['DELETE'])
+@jwt_required()
 def deleteTurma(email, id):
     try:
         if delete_turma(email, id):
@@ -225,6 +235,18 @@ def render_excluirUsuario():
 @app.route('/render_update')
 def render_update():
     return render_template('alterar_dados.html')
+
+@app.route('/render_deleteTurma')
+def render_deleteTurma():
+    return render_template('excluirTurma.html')
+
+@app.route('/render_deleteAv')
+def render_deleteAv():
+    return render_template('excluirAv.html')
+
+@app.route('/render_updateTurma')
+def render_updateTurma():
+    return render_template('updateTurma.html')
 
 # CARREGAR INFOS ===========================================
 

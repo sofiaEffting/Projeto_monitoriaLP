@@ -2,10 +2,10 @@ $(function () { // quando o documento estiver pronto/carregado
         
     var email = sessionStorage.getItem('email');
     var nome = sessionStorage.getItem('nome');
-    var meuip = sessionStorage.getItem('meuip');
+    var meuip = sessionStorage.getItem('meuip'); 
 
     if (email != null) {
-        jwt = sessionStorage.getItem('jwt');
+        var jwt = sessionStorage.getItem('jwt');
 
         $('#nome').append(nome);
         
@@ -31,8 +31,15 @@ $(function () { // quando o documento estiver pronto/carregado
                     lin = '<tr>' +
                         '<td>' + retorno.Detalhes[i].nome + '</td>'+
                         '</tr>';
+                    turmas = `<tr>
+                        <td> ${retorno.Detalhes[i].nome} </td>
+                        <td> ${retorno.Detalhes[i].alunos} </td>
+                        <td> <a href=# id="excluir_turma_${retorno.Detalhes[i].id}" 
+                        class="link_excluirTurma" >excluir</a>
+                        </tr>`;
                         // adiciona a linha no corpo da tabela
-                    $('#corpoTabelaTurmas').append(lin);
+                    $('#tabelaTurmasUsuario').append(lin);
+                    $('#tabelaTurmas').append(turmas);
                 }
             } else if(retorno.Resultado == 'ok' && retorno.Detalhes == 0) {
                 lin = '<tr>' +
