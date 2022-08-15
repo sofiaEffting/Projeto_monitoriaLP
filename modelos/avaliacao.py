@@ -1,4 +1,5 @@
 
+import email
 import os, sys
 currentdir = os.path.dirname(os.path.realpath(__file__)) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5/classes
 parentdir = os.path.dirname(currentdir) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5
@@ -82,70 +83,34 @@ def getArquivo(id: int):
         arq = arq[0]
     return arq
 
-def updateDesc(id: int, desc: str):
+def update_av(email: str, desc_av: str, campos: list, dados):
     try:
-        if getAvaliacao(id):
-            Avaliacao.query.filter(Avaliacao.id == id).update(dict(descricao = desc))
+        av = getAvaliacao(desc_av)
+        if av is not None and av.prof.email == email:
+            if 'prof' in campos:
+                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(prof_id = dados['prof']))
+            if 'arquivo' in campos:
+                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(arquivo = dados['arquivo']))
+            if 'turma' in campos:
+                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(turma_id = dados['turma']))
+            if 'dataFim' in campos:
+                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(dataFim = dados['dataFim']))
+            if 'dataInicio' in campos:
+                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(dataInicio = dados['dataInicio']))
+            if 'descricao' in campos:
+                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(descricao = dados['descricao']))
+            else:
+                raise Exception
             db.session.commit()
             return True
         return False
-    except Exception:
+    except Exception as e:
         return False
 
-def updateDataInicio(id: int, data_nova: str):
-    try:
-        if getAvaliacao(id):
-            Avaliacao.query.filter(Avaliacao.id == id).update(dict(dataInicio = data_nova))
-            db.session.commit()
-            return True
-        return False
-    except Exception:
-        return False
-
-def updateDataFim(id: int, data_nova: str):
-    try:
-        if getAvaliacao(id):
-            Avaliacao.query.filter(Avaliacao.id == id).update(dict(dataFim = data_nova))
-            db.session.commit()
-            return True
-        return False
-    except Exception:
-        return False
-
-def updateTurma(id: int, turma_id: int):
-    try:
-        if getAvaliacao(id):
-            Avaliacao.query.filter(Avaliacao.id == id).update(dict(turma_id = turma_id))
-            db.session.commit()
-            return True
-        return False
-    except Exception:
-        return False
-
-def updateProf(id: int, prof_id: int):
-    try:
-        if getAvaliacao(id):
-            Avaliacao.query.filter(Avaliacao.id == id).update(dict(prof_id = prof_id))
-            db.session.commit()
-            return True
-        return False
-    except Exception:
-        return False
-
-def updateArquivo(id: int, arquivo):
-    try:
-        if getAvaliacao(id):
-            Avaliacao.query.filter(Avaliacao.id == id).update(dict(arquivo = arquivo))
-            db.session.commit()
-            return True
-        return False
-    except Exception:
-        return False
-
-def deleteAvaliacao(id: int):
+def deleteAvaliacao(id: int, email: str):
     try:
         av = getAvaliacao(id)
-        if av is not None:
+        if av is not None and av.prof.email == email:
             Avaliacao.query.filter(Avaliacao.id == id).delete()
             db.session.commit()
             return True

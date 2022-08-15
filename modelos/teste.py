@@ -1,4 +1,5 @@
 import os, sys
+from xml.dom.minidom import Identified
 
 currentdir = os.path.dirname(os.path.realpath(__file__)) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5/classes
 parentdir = os.path.dirname(currentdir) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5
@@ -41,10 +42,10 @@ if __name__ == '__main__':
     db.session.add(av2)
     db.session.add(av3)
     db.session.commit()
-    print(Avaliacao.query.filter(Avaliacao.turmas.contains(turma1)).all())
-    '''Turma.query.filter(Turma.id == 1).delete()
-    db.session.commit()'''
+    '''print(Avaliacao.query.filter(Avaliacao.turmas.contains(turma1)).all())
+    Turma.query.filter(Turma.id == 1).delete()
+    db.session.commit()
     Avaliacao.query.filter(Avaliacao.id == 1).delete()
     db.session.commit()
-    print(Avaliacao.query.filter(Avaliacao.turmas.contains(turma1)).all())
-  
+    print(Avaliacao.query.filter(Avaliacao.turmas.contains(turma1)).all())'''
+    #print(update_av(email='efftingsofia@gmail.com', desc_av='av1', campos=['descricao', 'dataFim'], dados={'descricao': 'desc alterada', 'dataFim': 'data alterada'}))

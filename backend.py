@@ -1,3 +1,4 @@
+from crypt import methods
 from config import *
 from modelos.avaliacao import *
 from modelos.professor import *
@@ -159,11 +160,29 @@ def cadastroAvaliacao():
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
+@app.route('/atualizar_av/<string:email>/<string:desc_av>', methods=['POST'])
+@jwt_required()
+def atualizar_av(email, desc_av):
+    try:
+        dados = request.get_json(force=True)
+        campos = dados['campos']
+        novos_dados = dados['dados']
+        if update_av(email, desc_av, campos, novos_dados):
+            resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
+        else:
+            resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'backend'})
+
+    except Exception as e:
+        resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
+
+    resposta.headers.add('Access-Control-Allow-Origin', '*')
+    return resposta
+
 @app.route('/deleteAv/<email>/<int:av_id>', methods=['DELETE'])
 @jwt_required()
 def deleteAv(email, id):
     try:
-        if deleteAv(email, id):
+        if deleteAvaliacao(email, id):
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
             resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Avaliação não cadastrada!'})
@@ -191,6 +210,10 @@ def cadastroTurma():
     
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
+
+@app.route('/atualizar_turma/<string:email>/', methods=['POST'])
+@jwt_required()
+def atualizar_turma()
 
 @app.route('/deleteTurma/<string:email>/<int:turma_id>', methods=['DELETE'])
 @jwt_required()

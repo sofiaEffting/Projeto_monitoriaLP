@@ -51,17 +51,9 @@ def getEmails(alunos: str):
         emails.append(email)
     return emails
 
-def getNome(id: str):
-    nome = db.session.query(Turma.nome).filter(Turma.id == id).first()
-    if nome is not None:
-        nome = nome[0]
-    return nome
-
-def getAlunos(id: str):
-    alunos = db.session.query(Turma.alunos).filter(Turma.id == id).first()
-    if alunos is not None:
-        alunos = alunos[0]
-    return alunos
+def getAlunos(nome: str):
+    t = getTurma(nome)
+    return t.alunos
 
 def getTurma(id: int):
     return Turma.query.filter(Turma.id == id).first()
