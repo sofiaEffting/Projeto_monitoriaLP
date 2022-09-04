@@ -1,5 +1,3 @@
-
-import email
 import os, sys
 currentdir = os.path.dirname(os.path.realpath(__file__)) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5/classes
 parentdir = os.path.dirname(currentdir) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5
@@ -46,24 +44,9 @@ class Avaliacao(db.Model):
 
 def getAvaliacao(desc: str):
     return Avaliacao.query.filter(Avaliacao.descricao == desc).first()
-
-def getDescricao(id: int):
-    desc = Avaliacao.query(Avaliacao.descricao).filter(Avaliacao.id == id).first()
-    if desc is not None:
-        desc = desc[0]
-    return desc
-
-def getDataInicio(id: int):
-    data = Avaliacao.query(Avaliacao.dataInicio).filter(Avaliacao.id == id).first()
-    if data is not None:
-        data = data[0]
-    return data
-
-def getDataFim(id: int):
-    data = Avaliacao.query(Avaliacao.dataFim).filter(Avaliacao.id == id).first()
-    if data is not None:
-        data = data[0]
-    return data
+    
+def getAvaliacaobyID(id: int):
+    return Avaliacao.session.get(id)
 
 def getID(desc: str):
     id = Avaliacao.query(Avaliacao.id).filter(Avaliacao.descricao == desc).first()
@@ -71,36 +54,30 @@ def getID(desc: str):
         id = id[0]
     return id
 
-def getProf(id: int):
-    prof = Avaliacao.query(Avaliacao.prof_id).filter(Avaliacao.id == id).first()
-    if prof is not None:
-        prof = prof[0]
-    return prof
-
 def getArquivo(id: int):
     arq = Avaliacao.query(Avaliacao.arquivo).filter(Avaliacao.id == id).first()
     if arq is not None:
         arq = arq[0]
     return arq
 
-def update_av(email: str, desc_av: str, campos: list, dados):
+def update_av(email: str, desc_av: str, dados):
     try:
         av = getAvaliacao(desc_av)
         if av is not None and av.prof.email == email:
-            if 'prof' in campos:
-                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(prof_id = dados['prof']))
-            if 'arquivo' in campos:
-                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(arquivo = dados['arquivo']))
-            if 'turma' in campos:
-                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(turma_id = dados['turma']))
-            if 'dataFim' in campos:
-                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(dataFim = dados['dataFim']))
-            if 'dataInicio' in campos:
-                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(dataInicio = dados['dataInicio']))
-            if 'descricao' in campos:
-                Avaliacao.query.filter(Avaliacao.descricao == desc_av).update(dict(descricao = dados['descricao']))
-            else:
-                raise Exception
+            if 'prof' in dados:
+                av.prof = dados['prof']
+            if 'arquivo' in dados:
+                av.arq = dados['arquivo']
+            if 'turma' in dados:
+                av.turma = dados['turma']
+            if 'dataFim' in dados:
+                av.dataFim = dados['dataFim']
+            if 'dataInicio' in dados:
+                av.dataInicio = dados['dataInicio']
+            if 'descricao' in dados:
+                av.descricao = dados['descricao']
+            if dados is None:
+                return False
             db.session.commit()
             return True
         return False

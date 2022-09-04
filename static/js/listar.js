@@ -1,5 +1,5 @@
 $(function () { // quando o documento estiver pronto/carregado
-        
+
     var email = sessionStorage.getItem('email');
     var nome = sessionStorage.getItem('nome');
     var meuip = sessionStorage.getItem('meuip'); 
@@ -13,7 +13,7 @@ $(function () { // quando o documento estiver pronto/carregado
 
         // chamada ao backend
         $.ajax({
-            url: `http://${meuip}:5000/listar/Turma?email=${email}`,
+            url: `http://${meuip}:5000/listar/Turma/0?email=${email}`,
             method: 'GET',
             dataType: 'json', // os dados são recebidos no formato json
             contentType: 'text/plain',
@@ -28,35 +28,35 @@ $(function () { // quando o documento estiver pronto/carregado
             if (retorno.Resultado === 'ok' && retorno.Detalhes != 0) {
                 // percorrer lista de turmas retornadas
                 for (var i in retorno.Detalhes) {
-                    lin = '<tr>' +
-                        '<td>' + retorno.Detalhes[i].nome + '</td>'+
-                        '</tr>';
-                    turmas = `<tr>
-                        <td> ${retorno.Detalhes[i].nome} </td>
-                        <td> ${retorno.Detalhes[i].alunos} </td>
-                        <td> <a href=# id="excluir_turma_${retorno.Detalhes[i].id}" 
-                        class="link_excluirTurma" >excluir</a>
+                    lin = `<tr>
+                        <td> <a href=# id="${retorno.Detalhes[i].id}" class='link_selecionar_turma'>${retorno.Detalhes[i].nome}</a></td>
                         </tr>`;
-                        // adiciona a linha no corpo da tabela
+                    // adiciona a linha no corpo da tabela
                     $('#tabelaTurmasUsuario').append(lin);
-                    $('#tabelaTurmas').append(turmas);
                 }
             } else if(retorno.Resultado == 'ok' && retorno.Detalhes == 0) {
-                lin = '<tr>' +
-                    'Nenhuma turma cadastrada!'+
-                    '</tr>';
-                $('#corpoTabelaTurmas').append(lin);
-        
+                lin = `<tr> <td>
+                    Nenhuma turma cadastrada!
+                    </td> </tr>`;
+                $('#tabelaTurmasUsuario').append(lin);
             } else {
                 alert('Erro ao listar dados: ' + retorno.Detalhes);
             }
         };
 
+        // código para mapear link de seleção de turma
+        $(document).on("click", ".link_selecionar_turma", function () {
+            id_turma = $(this).attr('id'); // obter id do elemento clicado
+            sessionStorage.setItem('id_turma', id_turma); // guardar o id na sessão
+            // encaminhar para a página da turma
+            window.location.assign('/render_turma');
+        });
+
         // AVALIACOES
 
         // chamada ao backend
         $.ajax({
-            url: `http://${meuip}:5000/listar/Avaliacao?email=${email}`,
+            url: `http://${meuip}:5000/listar/Avaliacao/0?email=${email}`,
             method: 'GET',
             dataType: 'json',
             contentType: 'text/plain',
@@ -82,9 +82,9 @@ $(function () { // quando o documento estiver pronto/carregado
                     $('#corpoTabelaAvs').append(lin); 
                 }
             } else if(retorno.Resultado === 'ok' && retorno.Detalhes == 0) {
-                lin = '<tr>' +
-                    '<td> Nenhuma avaliação cadastrada! </td>'+
-                    '</tr>';
+                lin = `<tr>
+                    <td> Nenhuma avaliação cadastrada! </td>
+                    </tr>`;
                 $('#corpoTabelaAvs').append(lin);
             } else {
                 alert('Erro ao listar dados: ' + retorno.Detalhes);
@@ -95,5 +95,7 @@ $(function () { // quando o documento estiver pronto/carregado
         alert('Você ainda não está logado, por favor, conecte-se!');
         window.location.assign('/');
     }
+
+    
     
 });

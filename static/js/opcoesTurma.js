@@ -21,38 +21,3 @@ $(function () {
     }
 
 });
-
-
-function carregarCombo(combo_id, nome_classe) {
-    $.ajax({
-        url: 'http://localhost:5000/listar/'+nome_classe,
-        method: 'GET',
-        dataType: 'json', // os dados são recebidos no formato json
-        success: carregar, // chama a função listar para processar o resultado
-        error: function(problema) {
-            alert("erro ao ler dados, verifique o backend: ");
-        }
-    });
-    function carregar (dados) {
-        // esvaziar o combo
-        $('#'+combo_id).empty();
-        // mostra ícone carregando...
-        $('#loading_'+combo_id).removeClass('d-none');
-        // percorrer a lista de dados
-        for (var i in dados) { //i vale a posição no vetor
-            $('#'+combo_id).append(
-                $('<option></option>').attr("value", 
-                    dados[i].id).text(dados[i].nome));
-        }
-        // espera um pouco, para ver o ícone "carregando"
-        setTimeout(() => { 
-            $('#loading_'+combo_id).addClass('d-none');
-         }, 1000);
-    }
-}
-
-$('#modalIncluirExameRealizado').on('shown.bs.modal', function (e) {
-    // carregar as listas de pessoas e exames
-    carregarCombo("campoPessoaId", "Pessoa");
-    carregarCombo("campoExameId", "Exame");
-})

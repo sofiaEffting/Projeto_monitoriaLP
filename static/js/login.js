@@ -8,9 +8,7 @@ $(function(){
             // remove itens da sessão
             sessionStorage.clear();
             // atualiza a tela
-            window.location.assign('/');
         } else {
-            window.location.assign('/');
             alert('Você não está logado!');
             
         }
@@ -51,8 +49,6 @@ $(function(){
                 // guarda as infos na sessão
                 sessionStorage.setItem('email',retorno.email);
                 sessionStorage.setItem('nome',retorno.nome);
-                sessionStorage.setItem('turmas',retorno.turmas);
-                sessionStorage.setItem('avs',retorno.avs);
                 sessionStorage.setItem('jwt',retorno.token)
                 window.location.assign('/render_usuario');
             } else {

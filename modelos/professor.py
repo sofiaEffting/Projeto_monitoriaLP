@@ -1,5 +1,4 @@
 import os, sys
-
 from modelos.avaliacao import Avaliacao, tabela_associacao
 from modelos.turma import Turma
 currentdir = os.path.dirname(os.path.realpath(__file__)) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5/classes
@@ -44,6 +43,25 @@ class Professor(db.Model):
         return f'Id: {self.id} | Nome: {self.nome} | Email: {self.email} | Senha: {self.senha} | Avaliações: {avs}'+\
                     f'Turmas: {turmas.removesuffix(", ")} |'
 
+filtro = ('alert.','<script>','<','>','javascript',';','--',",","=","+",'/',"'",'"',"src=","admin'--"
+            ,"or 1=1", "delete from usuario", "document.write","sessionStorage.","Window.","document.",'href=',"]>")
+
+def verifica_injecao(dado: str):
+    for f in filtro: # laço de repetição que verifica se não há um texto suspeito de possuir injeção XSS ou SQL.
+        if f in dado:
+            resposta = dado.replace(f,'')
+    if dado == '':
+        resposta = None
+    return resposta
+
+def verifica_injecao_email(email: str):
+    for f in filtro: # laço de repetição que verifica se não há um texto suspeito de possuir injeção XSS ou SQL.
+        if f in email:
+            resposta = email.replace(f,'')
+    if resposta == '' and len(resposta)<=4 or '@' not in resposta:
+        resposta = None
+    return resposta
+
 def criptografar_senha(senha: str):
     senha = senha.encode('utf-8')
     senha = hashpw(senha, gensalt())
@@ -51,36 +69,21 @@ def criptografar_senha(senha: str):
 
 def verifica_senha(senha_dig:str, email_dig:str) -> bool:
     try:
-        senha_bd = getSenha(email_dig)
-        if senha_bd is not None:
+        prof = getProfessor(email_dig)
+        if prof.senha is not None:
             senha_dig = senha_dig.encode('utf-8')
-            if checkpw(senha_dig, senha_bd):
+            if checkpw(senha_dig, prof.senha):
                 return True
         return False
     except Exception:
         return False
 
-
 def getProfessor(email: str):
     return Professor.query.filter(Professor.email == email).first()
 
 def getIdProf(email: str):
-    prof_id = db.session.query(Professor.id).filter(Professor.email == email).first()
-    if prof_id is not None:
-        prof_id = prof_id[0]
-    return prof_id
-
-def getNomeProf(email: str):
-    profNome = db.session.query(Professor.nome).filter(Professor.email == email).first()
-    if profNome is not None:
-        profNome = profNome[0]
-    return profNome
-
-def getSenha(email: str):
-    profSenha = db.session.query(Professor.senha).filter(Professor.email == email).first()
-    if profSenha is not None:
-        profSenha = profSenha[0]
-    return profSenha
+    prof = getProfessor(email)
+    return prof.id
 
 def getAvs(email: str):
     prof = getProfessor(email)
@@ -90,34 +93,23 @@ def getTurmas(email: str):
     prof = getProfessor(email)
     return prof.turmas
 
-def updateNome(nome: str, email: str):
+def update_prof(email: str, dados):
     try:
-        if getProfessor(nome) is None:
-            Professor.query.filter(Professor.email==email).update(dict(nome=nome))
+        prof = getProfessor(email)
+        if prof is not None:
+            if 'nome' in dados:
+                prof.nome = verifica_injecao(dados['nome']) 
+            if 'senha' in dados:
+                senha = verifica_injecao(dados['senha']) 
+                prof.senha = criptografar_senha(senha) 
+            if 'email' in dados:
+                prof.email = verifica_injecao_email(dados['email'])
+            if dados is None:
+                return False
             db.session.commit()
             return True
         return False
-    except Exception:
-        return False
-
-def updateSenha(senha: str, email: str):
-    try:
-        senha = criptografar_senha(senha)
-        if Professor.query.filter(Professor.email==email).update(dict(senha=senha)):
-            db.session.commit()
-            return True
-        return False
-    except Exception:
-        return False
-
-def updateEmail(email_atual: str, email_novo: str):
-    try:
-        if getProfessor(email_novo) is None:
-            Professor.query.filter(Professor.email==email_atual).update(dict(email=email_novo))
-            db.session.commit()
-            return True
-        return False
-    except Exception:
+    except Exception as e:
         return False
 
 def deleteProf(email: str):

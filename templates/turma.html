@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Turma{% endblock %}
+{% block content %}
+<h1 id="nome_turma"></h1>
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Alunos</th>
+            <th>Emails</th>
+        </tr>
+    </thead>
+    <tbody id="tabelaTurma">
+    </tbody>
+</table>
+<button id="editar_turma">Editar</button>
+<button id="excluir_turma">Excluir</button>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static',filename='js/turma.js')}}" type="text/javascript"></script>
+{% endblock %}

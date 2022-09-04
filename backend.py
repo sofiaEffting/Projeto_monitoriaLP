@@ -1,4 +1,3 @@
-from crypt import methods
 from config import *
 from modelos.avaliacao import *
 from modelos.professor import *
@@ -37,55 +36,17 @@ def excluirUsuario(email):
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
-# UPDATES ---------------------------------------------
-
-@app.route('/atualizar_nome', methods=['POST'])
+@app.route('/atualizarUsuario/<string:email>', methods=['PUT'])
 @jwt_required()
-def atualizar_nome():
+def atualizarUsuario(email):
     try:
-        dados = request.get_json(force=True)
-        nome = dados['novo_nome']
-
-        if updateNome(nome, dados['email']):
-            resposta = jsonify({'Resultado': 'ok', 'nome': nome})
-        else:
-            resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Erro ao atualizar!'})
-        
-    except Exception as e:
-        resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)}) 
-
-    resposta.headers.add('Access-Control-Allow-Origin', '*')
-    return resposta
-
-@app.route('/atualizar_email', methods=['POST'])
-@jwt_required()
-def atualizar_email():
-    try:
-        dados = request.get_json(force=True) 
-        email_novo = dados['novo_email']
-        if updateEmail(dados['email'], email_novo):
-            resposta = jsonify({'Resultado': 'ok','email':email_novo})
-        else:
-            resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Erro ao atualizar!'})
-    
-    except Exception as e:
-        resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
-
-    resposta.headers.add('Access-Control-Allow-Origin', '*')
-    return resposta
-
-@app.route('/atualizar_senha', methods=['POST'])
-@jwt_required()
-def atualizar_senha():
-    try:
-        dados = request.get_json(force=True) 
-        if updateSenha(dados['nova_senha'], dados['email']):
+        novos_dados = request.get_json(force=True) 
+        if update_prof(email, novos_dados):
             resposta = jsonify({'Resultado': 'ok'})
         else:
-            resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Erro ao atualizar!'})
-
+           resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Erro ao atualizar!'})
     except Exception as e:
-        resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
+         resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
 
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
@@ -160,25 +121,7 @@ def cadastroAvaliacao():
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
-@app.route('/atualizar_av/<string:email>/<string:desc_av>', methods=['POST'])
-@jwt_required()
-def atualizar_av(email, desc_av):
-    try:
-        dados = request.get_json(force=True)
-        campos = dados['campos']
-        novos_dados = dados['dados']
-        if update_av(email, desc_av, campos, novos_dados):
-            resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
-        else:
-            resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'backend'})
-
-    except Exception as e:
-        resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
-
-    resposta.headers.add('Access-Control-Allow-Origin', '*')
-    return resposta
-
-@app.route('/deleteAv/<email>/<int:av_id>', methods=['DELETE'])
+@app.route('/deleteAv/<string:email>/<int:av_id>', methods=['DELETE'])
 @jwt_required()
 def deleteAv(email, id):
     try:
@@ -186,6 +129,23 @@ def deleteAv(email, id):
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
             resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Avaliação não cadastrada!'})
+    except Exception as e:
+        resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
+
+    resposta.headers.add('Access-Control-Allow-Origin', '*')
+    return resposta
+
+@app.route('/atualizar_av/<string:email>/<string:desc_av>', methods=['PUT'])
+@jwt_required()
+def atualizar_av(email, desc_av):
+    try:
+        dados = request.get_json(force=True)
+        novos_dados = dados['dados']
+        if update_av(email, desc_av, novos_dados):
+            resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
+        else:
+            resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'backend'})
+
     except Exception as e:
         resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
 
@@ -211,15 +171,27 @@ def cadastroTurma():
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
-@app.route('/atualizar_turma/<string:email>/', methods=['POST'])
+@app.route('/atualizar_turma/<string:email>/<int:id_turma>', methods=['PUT'])
 @jwt_required()
-def atualizar_turma()
+def atualizar_turma(email, id_turma):
+    try:
+        dados = request.get_json(force=True)
+        if update_turma(email, id_turma, dados):
+            resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
+        else:
+            resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'backend'})
+
+    except Exception as e:
+        resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
+
+    resposta.headers.add('Access-Control-Allow-Origin', '*')
+    return resposta
 
 @app.route('/deleteTurma/<string:email>/<int:turma_id>', methods=['DELETE'])
 @jwt_required()
-def deleteTurma(email, id):
+def deleteTurma(email, turma_id):
     try:
-        if delete_turma(email, id):
+        if delete_turma(email, turma_id):
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
             resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Turma não cadastrada!'})
@@ -269,24 +241,33 @@ def render_deleteAv():
 
 @app.route('/render_updateTurma')
 def render_updateTurma():
-    return render_template('updateTurma.html')
+    return render_template('editarTurma.html')
+
+@app.route('/render_turma')
+def render_turma():
+    return render_template('turma.html')
 
 # CARREGAR INFOS ===========================================
 
-@app.route('/listar/<string:classe>', methods=['GET'])
+@app.route('/listar/<string:classe>/<int:id>', methods=['GET'])
 @jwt_required()
-def listar(classe):
+def listar(classe, id):
     try:
 
         email = request.args.get('email')
         resposta = {'Resultado': 'ok'}
 
         objetos = None
-        if classe == 'Avaliacao':
+        if classe == 'Avaliacao' and id == 0:
             objetos = getAvs(email) # pega as avs (obj)
-        if classe == 'Turma':
+        if classe == 'Avaliacao' and id != 0:
+            obj = getAvaliacaobyID(id) # pega uma avaliação específica pelo id
+            objetos = [obj]
+        if classe == 'Turma' and id == 0:
             objetos = getTurmas(email) # pega as turmas (obj)
-
+        if classe == 'Turma' and id != 0:
+            obj = getTurmabyID(id) # pega uma turma específica pelo id
+            objetos = [obj]
         if objetos is not None:
             lista_jsons = [ x.json() for x in objetos ] # transforma cada obj em json
             resposta.update({'Detalhes': lista_jsons})
@@ -300,7 +281,6 @@ def listar(classe):
     # adicionar cabeçalho de liberação de origem
     resposta.headers.add("Access-Control-Allow-Origin", "*")
     return resposta
-
 
 if __name__ == '__main__':
     

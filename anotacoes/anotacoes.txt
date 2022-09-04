@@ -6,3 +6,5 @@ arrumar o delete turma para deletar também as avaliações que tiverem somente 
 pra quando isso acontecer e manter a avaliação sem uma turma 
 
 descobrir como excluir a tabela_associacao
+
+descobrir o que é o xhrFields: { withCredentials: true },

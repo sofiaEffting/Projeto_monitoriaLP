@@ -55,8 +55,11 @@ def getAlunos(nome: str):
     t = getTurma(nome)
     return t.alunos
 
-def getTurma(id: int):
+def getTurmabyID(id: int):
     return Turma.query.filter(Turma.id == id).first()
+
+def getTurma(nome: str):
+    return Turma.query.filter(Turma.nome == nome).first()
 
 def getID(nome: str):
     id = Turma.query(Turma.id).filter(Turma.nome == nome).first()
@@ -66,10 +69,9 @@ def getID(nome: str):
 
 def delete_turma(email: str, id: int):
     try:
-        turma = getTurma(id)
+        turma = getTurmabyID(id)
         if turma is not None and turma.prof.email == email:
-            Turma.query.filter(id == id).delete()
-            # excluir tbm as avs que só possuem essa turma
+            Turma.query.filter(Turma.id == id).delete()
             db.session.commit()
             return True
         return False
@@ -85,5 +87,23 @@ def cadastrarTurma(nome: str, alunos: str, prof_id: int):
             return True
         return False
     except Exception:
+        return False
+
+def update_turma(email: str, id_turma: str, dados):
+    try:
+        turma = getTurmabyID(id_turma)
+        if turma is not None and turma.prof.email == email:
+            if 'nome' in dados:
+                turma.nome = dados['nome']
+            if 'alunos' in dados:
+                turma.alunos = dados['alunos']
+            if 'avaliacoes' in dados:
+                turma.avaliacoes = dados['avaliacoes']
+            if dados == []: 
+                return False
+            db.session.commit()
+            return True
+        return False
+    except Exception as e:
         return False
 
