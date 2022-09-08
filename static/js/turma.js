@@ -51,11 +51,12 @@ $(function() {
 
     $(document).on('click', '#excluir_turma', function() {
 
-        var email = sessionStorage.getItem('email')
+        var email = sessionStorage.getItem('email');
         var meuip = sessionStorage.getItem('meuip');
+        var id_turma = sessionStorage.getItem('id_turma'); 
 
         if (email != null) {
-            jwt = sessionStorage.getItem('jwt');
+            var jwt = sessionStorage.getItem('jwt');
 
         $.ajax({
             url: `http://${meuip}:5000/deleteTurma/${email}/${id_turma}`,
@@ -76,7 +77,7 @@ $(function() {
         }
 
         function erroAoExcluir (retorno) {
-            alert('Erro ao excluir turma: verifique o backend!');
+            alert('Erro ao excluir turma: ' + retorno.Detalhes);
         }
 
     } else {
@@ -122,12 +123,7 @@ $(function() {
                         <td> ${nome}</td>
                         <td> ${email}
                         </tr>`;
-                        lin2 = `<tr>
-                        <td> ${nome} </td>
-                        <td> ${email}</td>
-                        </tr>`;
                     $('#tabelaTurma').append(lin); // adiciona a linha no corpo da tabela
-                    $('#tabelaTurmaUpdate').append(lin2);
                     }  
                 }
             } else if(retorno.Resultado == 'ok' && retorno.Detalhes == 0) {

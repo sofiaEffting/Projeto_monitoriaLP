@@ -123,9 +123,9 @@ def cadastroAvaliacao():
 
 @app.route('/deleteAv/<string:email>/<int:av_id>', methods=['DELETE'])
 @jwt_required()
-def deleteAv(email, id):
+def deleteAv(email, av_id):
     try:
-        if deleteAvaliacao(email, id):
+        if deleteAvaliacao(av_id, email):
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
             resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Avaliação não cadastrada!'})
@@ -135,13 +135,12 @@ def deleteAv(email, id):
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
-@app.route('/atualizar_av/<string:email>/<string:desc_av>', methods=['PUT'])
+@app.route('/atualizar_av/<string:email>/<int:id_av>', methods=['PUT'])
 @jwt_required()
-def atualizar_av(email, desc_av):
+def atualizar_av(email, id_av):
     try:
         dados = request.get_json(force=True)
-        novos_dados = dados['dados']
-        if update_av(email, desc_av, novos_dados):
+        if update_av(email, id_av, dados):
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
             resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'backend'})
@@ -176,6 +175,7 @@ def cadastroTurma():
 def atualizar_turma(email, id_turma):
     try:
         dados = request.get_json(force=True)
+        print(dados)
         if update_turma(email, id_turma, dados):
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
@@ -211,14 +211,6 @@ def render_cadastro():
 def render_usuario():
     return render_template('usuario.html')
 
-@app.route('/render_cadastroAv')
-def render_cadastroAv():
-    return render_template('cadastroAv.html')
-
-@app.route('/render_cadastroTurma')
-def render_cadastroTurma():
-    return render_template('cadastroTurma.html')
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -235,17 +227,33 @@ def render_update():
 def render_deleteTurma():
     return render_template('excluirTurma.html')
 
-@app.route('/render_deleteAv')
-def render_deleteAv():
-    return render_template('excluirAv.html')
-
 @app.route('/render_updateTurma')
 def render_updateTurma():
     return render_template('editarTurma.html')
 
+@app.route('/render_cadastroTurma')
+def render_cadastroTurma():
+    return render_template('cadastroTurma.html')
+
 @app.route('/render_turma')
 def render_turma():
     return render_template('turma.html')
+
+@app.route('/render_cadastroAv')
+def render_cadastroAv():
+    return render_template('cadastroAv.html')
+
+@app.route('/render_deleteAv')
+def render_deleteAv():
+    return render_template('excluirAv.html')
+
+@app.route('/render_av')
+def render_av():
+    return render_template('av.html')
+
+@app.route('/render_updateAv')
+def render_updateAv():
+    return render_template('editarAv.html')
 
 # CARREGAR INFOS ===========================================
 

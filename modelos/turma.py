@@ -99,7 +99,7 @@ def update_turma(email: str, id_turma: str, dados):
                 turma.alunos = dados['alunos']
             if 'avaliacoes' in dados:
                 turma.avaliacoes = dados['avaliacoes']
-            if dados == []: 
+            if dados == {}: 
                 return False
             db.session.commit()
             return True

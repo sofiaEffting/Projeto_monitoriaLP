@@ -46,7 +46,7 @@ def getAvaliacao(desc: str):
     return Avaliacao.query.filter(Avaliacao.descricao == desc).first()
     
 def getAvaliacaobyID(id: int):
-    return Avaliacao.session.get(id)
+    return Avaliacao.query.filter(Avaliacao.id == id).first()
 
 def getID(desc: str):
     id = Avaliacao.query(Avaliacao.id).filter(Avaliacao.descricao == desc).first()
@@ -60,23 +60,24 @@ def getArquivo(id: int):
         arq = arq[0]
     return arq
 
-def update_av(email: str, desc_av: str, dados):
+def update_av(email: str, id_av: int, dados):
     try:
-        av = getAvaliacao(desc_av)
+        av = getAvaliacaobyID(id_av)
+        print(dados)
         if av is not None and av.prof.email == email:
-            if 'prof' in dados:
-                av.prof = dados['prof']
             if 'arquivo' in dados:
                 av.arq = dados['arquivo']
             if 'turma' in dados:
                 av.turma = dados['turma']
             if 'dataFim' in dados:
+                print('dt2')
                 av.dataFim = dados['dataFim']
             if 'dataInicio' in dados:
+                print('dt1')
                 av.dataInicio = dados['dataInicio']
             if 'descricao' in dados:
                 av.descricao = dados['descricao']
-            if dados is None:
+            if dados == {}:
                 return False
             db.session.commit()
             return True
@@ -86,7 +87,7 @@ def update_av(email: str, desc_av: str, dados):
 
 def deleteAvaliacao(id: int, email: str):
     try:
-        av = getAvaliacao(id)
+        av = getAvaliacaobyID(id)
         if av is not None and av.prof.email == email:
             Avaliacao.query.filter(Avaliacao.id == id).delete()
             db.session.commit()

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Editar Avaliação{% endblock %}
+{% block content %}
+<h1>Editar Avaliação</h1>
+<form onsubmit="return false" enctype="multipart/form-data">
+    <div>
+        <input type="text"  id="desc-update" required autofocus placeholder="Decrição:">
+    </div>
+    <div>
+        <input type="datetime-local" id="dtInicio-update" required placeholder="Data início:" value="hj">
+    </div>
+    <div>
+		<input type="datetime-local" id="dtFim-update" placeholder="Data limite:">
+    </div>
+    <div>
+        <input type="text" id="turmas-update" placeholder="Turma(s)">
+    </div>
+    <div>
+        <input type="file" id="arq-update" accept=".txt, .pdf, .doc, .docx" multiple>
+    </div>
+    <br>
+    <button id="btAtualizarAv">Alterar</button><button id="btcancelar">Cancelar</button>
+    </form>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static',filename='js/updateAv.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static',filename='js/login.js')}}" type="text/javascript"></script>
+{% endblock %}
+ 

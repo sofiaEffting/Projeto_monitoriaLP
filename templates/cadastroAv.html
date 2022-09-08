@@ -5,7 +5,7 @@
 	<form onsubmit="return false" enctype="multipart/form-data">
 		<input type="text"  id="campoDescricao" required autofocus placeholder="Decrição:" value="prova"><br>
 		<input type="datetime-local" id="campoDataInicio" required placeholder="Data início:" value="hj"><br>
-		<input type="datetime-local" id="campoDataFim" placeholder="Data término:" value="amn"><br>
+		<input type="datetime-local" id="campoDataFim" placeholder="Data limite:" value="amn"><br>
 		<input type="text" id="campoTurmas" placeholder="Turmas id" value="1, 2"><br>
 		<input type="file" id="campoArquivo" accept=".txt, .pdf, .doc, .docx" multiple><br><br>
 		<button id="btCadastrarAV"  type="submit" >Cadastrar</button>
@@ -13,5 +13,6 @@
 {% endblock %}
 {% block scripts %}
 <script src="{{url_for('static',filename='js/av.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static',filename='js/login.js')}}" type="text/javascript"></script>
 {% endblock %}
 	

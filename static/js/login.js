@@ -8,8 +8,10 @@ $(function(){
             // remove itens da sessão
             sessionStorage.clear();
             // atualiza a tela
+            window.location.assign('/')
         } else {
             alert('Você não está logado!');
+            window.location.assign('/')
             
         }
     });

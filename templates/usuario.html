@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Usuário{% endblock %}
+{% block link %}
+<link href="{{url_for('static', filename='css/usuario.css')}}" rel="stylesheet">
+{% endblock %}
 {% block content %}
 	<h1 id="nome">Bem vindo(a), </h1>
     <br>
@@ -19,9 +22,7 @@
         <thead>
             <tr>
                 <th scope="col">Descrição</th>
-                <th scope="col">Data Início</th>
-                <th scope="col">Data Final</th>
-                <th scope="col">Turma</th>
+                <th scope="col">Turmas</th>
             </tr>
         </thead>
         <tbody id="corpoTabelaAvs">

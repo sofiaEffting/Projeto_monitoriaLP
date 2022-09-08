@@ -28,8 +28,8 @@ $(function () { // quando o documento estiver pronto/carregado
             if (retorno.Resultado === 'ok' && retorno.Detalhes != 0) {
                 // percorrer lista de turmas retornadas
                 for (var i in retorno.Detalhes) {
-                    lin = `<tr>
-                        <td> <a href=# id="${retorno.Detalhes[i].id}" class='link_selecionar_turma'>${retorno.Detalhes[i].nome}</a></td>
+                    lin = `<tr id="${retorno.Detalhes[i].id}" class='link_selecionar_turma'>
+                        <td> ${retorno.Detalhes[i].nome} </td>
                         </tr>`;
                     // adiciona a linha no corpo da tabela
                     $('#tabelaTurmasUsuario').append(lin);
@@ -48,9 +48,16 @@ $(function () { // quando o documento estiver pronto/carregado
         $(document).on("click", ".link_selecionar_turma", function () {
             id_turma = $(this).attr('id'); // obter id do elemento clicado
             sessionStorage.setItem('id_turma', id_turma); // guardar o id na sessão
-            // encaminhar para a página da turma
-            window.location.assign('/render_turma');
+            window.location.assign('/render_turma'); // encaminhar para a página da turma
         });
+
+        $(document).on('click', '.link_selecionar_av', function(){
+            id_av = $(this).attr('id');
+            sessionStorage.setItem('id_av', id_av);
+            window.location.assign('/render_av')
+        });
+
+
 
         // AVALIACOES
 
@@ -72,19 +79,15 @@ $(function () { // quando o documento estiver pronto/carregado
             if (retorno.Resultado === 'ok' && retorno.Detalhes != 0){
                 // percorrer a lista de avs retornada
                 for (var i in retorno.Detalhes) {
-                    lin = "<tr>"+
-                    "<td>" + retorno.Detalhes[i].descricao + "</td>" +
-                    "<td>" + retorno.Detalhes[i].dataInicio + "</td>" +
-                    "<td>" + retorno.Detalhes[i].dataFim + "</td>" +
-                    "<td>" + retorno.Detalhes[i].turmas + "</td>" +
-                    "</tr>";
+                    lin = `<tr id="${retorno.Detalhes[i].id}" class='link_selecionar_av'> 
+                    <td> ${retorno.Detalhes[i].descricao} </td>
+                    <td> ${retorno.Detalhes[i].turmas} </td>
+                    </tr>`;
                     // adiciona a linha no corpo da tabela
                     $('#corpoTabelaAvs').append(lin); 
                 }
             } else if(retorno.Resultado === 'ok' && retorno.Detalhes == 0) {
-                lin = `<tr>
-                    <td> Nenhuma avaliação cadastrada! </td>
-                    </tr>`;
+                lin = `<tr><td> Nenhuma avaliação cadastrada! </td></tr>`;
                 $('#corpoTabelaAvs').append(lin);
             } else {
                 alert('Erro ao listar dados: ' + retorno.Detalhes);
