@@ -21,5 +21,5 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 from datetime import timedelta
 
 app.config['JWT_SECRET_KEY'] = 'eUqIOCuW5Dl7g5s3F0yMXILVXPW1Lctqw4AbnmAN'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes= 30)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes= 120)
 jwt = JWTManager(app)

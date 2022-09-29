@@ -47,6 +47,7 @@ filtro = ('alert.','<script>','<','>','javascript',';','--',",","=","+",'/',"'",
             ,"or 1=1", "delete from usuario", "document.write","sessionStorage.","Window.","document.",'href=',"]>")
 
 def verifica_injecao(dado: str):
+    resposta = dado
     for f in filtro: # laço de repetição que verifica se não há um texto suspeito de possuir injeção XSS ou SQL.
         if f in dado:
             resposta = dado.replace(f,'')
@@ -55,6 +56,7 @@ def verifica_injecao(dado: str):
     return resposta
 
 def verifica_injecao_email(email: str):
+    resposta = email
     for f in filtro: # laço de repetição que verifica se não há um texto suspeito de possuir injeção XSS ou SQL.
         if f in email:
             resposta = email.replace(f,'')

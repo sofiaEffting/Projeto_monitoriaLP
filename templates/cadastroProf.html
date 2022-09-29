@@ -1,23 +1,24 @@
 {% extends 'base.html' %}
 {% block title %}Cadastro Usuário{% endblock %}
 {% block content %}
-    <form onsubmit="return false;">
+<div class="container">
+    <form onsubmit="return false">
         <h1>Realize seu cadastro!</h1>
-    <div>
-        <input type="text" id="nome-cadastro" required placeholder="Nome:" value="sofia_teste">
+    <div class="form-group mb-2">
+        <input type="text" class="form-control" id="nome-cadastro" required placeholder="Nome:">
     </div>
-    <div>
-        <input type="email" id="email-cadastro" required placeholder="Email:" value="">
+    <div class="form-group mb-2">
+        <input type="email" class="form-control" id="email-cadastro" required placeholder="Email:">
     </div>
-    <div >
-        <input type="password" id="senha-cadastro" required placeholder="Senha:" value="12345678"><br><br>
+    <div class="form-group mb-2">
+        <input type="password" class="form-control" id="senha-cadastro" required placeholder="Senha:">
     </div>
-        <button id="btCadastrarPROF" type="submit">Enviar</button><br>
+        <button id="btCadastrarPROF" class="btn btn-primary">Enviar</button><br>
         <a href="/">Já possui cadastro?</a>
     </form>
-
+</div>
 {% endblock %}
 {% block scripts %}
 <script src="{{url_for('static',filename='js/prof.js')}}" type="text/javascript"></script>
-<script src="{{url_for('static',filename='js/login.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static',filename='js/logout.js')}}" type="text/javascript"></script>
 {% endblock %}

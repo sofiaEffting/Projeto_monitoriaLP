@@ -13,12 +13,5 @@ $(function () { // quando o documento estiver pronto/carregado
     } else {
         meuip = primeiro;
     }
-    var mensagem = "URL = " + url + "<br/>Endereço do servidor: "+meuip;
-    $("#mostrar").html(mensagem);
-
     sessionStorage.setItem("meuip",meuip); // guarda na sessão
-
-    // DESCOMENTAR A LINHA ABAIXO PARA 
-    // fazer o encaminhamento automático ao início do sistema
-    //window.location = "principal.html"; // vai para a página principal do sistema
 });

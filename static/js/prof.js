@@ -10,17 +10,16 @@ $(function() {
         var senha = $('#senha-cadastro').val();
 
         var dados = JSON.stringify({nome: nome, email: email, senha: senha});
+        console.log(dados);
 
         if (email != null) {
-            var jwt = sessionStorage.getItem('jwt');
             
             // chamada ao backend
             $.ajax({
                 url: `http://${meuip}:5000/cadastroUsuario`,
                 type: 'POST',
                 dataType: 'json', // os dados são recebidos no formato json
-                contentType: 'text/plain',
-                headers: {Authorization: 'Bearer ' + jwt},
+                contentType: 'application/json',
                 data: dados,
                 success: usuarioCadastrado,
                 error: anyError
@@ -47,47 +46,7 @@ $(function() {
 
     });
 
-    $(document).on('click', '#excluirConta', function() {
-
-        if (email != null) {
-            var jwt = sessionStorage.getItem('jwt');
-
-            // chamada ao backend
-            $.ajax({
-                url: `http://${meuip}:5000/excluirUsuario/${email}`,
-                type: 'DELETE', 
-                dataType: 'json',
-                contentType: 'text/plain',
-                headers: {Authorization: 'Bearer ' + jwt},
-                success: pessoaExcluida, 
-                error: erroAoExcluir
-            });
-
-            function pessoaExcluida (retorno) {
-                if (retorno.Resultado == 'ok') {
-                    alert('Usuário removido');
-                    $('#mensagem').text('Usuário removido');
-                    sessionStorage.clear()
-                    window.location.assign('/');
-
-                } else {
-                    alert(retorno.Resultado + ': ' + retorno.Detalhes);
-                }            
-            }
-
-            function erroAoExcluir (retorno) {
-                alert('Erro ao excluir conta: ' + retorno.Detalhes);
-            }
-
-        } else {
-            alert('Erro ao listar dados: ' + retorno.Detalhes);
-        }
-    });
-
-    // mapeamento do botão cancelar
-    $(document).on('click', '#btcancelar', function(){
-        window.location.assign('/render_usuario')
-    })
+   
 
     $(document).on('click', '#btAtualizarProf', function(){
         // pegar dados na tela

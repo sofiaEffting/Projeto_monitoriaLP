@@ -1,6 +1,5 @@
 $(function() {
 
-
     // Cadastro Turma
     $(document).on('click', '#btCadastrarTurma', function(){
         
@@ -26,31 +25,45 @@ $(function() {
             });
 
             function turmaCadastrada (retorno) {
-
                 if (retorno.Resultado == 'ok') {
-                    alert('Turma cadastrada com sucesso!');
+                    Swal.fire({
+                        title: "Turma cadastrada com sucesso!",
+                        icon: "success",
+                        showConfirmButton: true
+                    });
 
                     $('#campoNomeTurma').val('');
                     $('#campoAlunos').val('');
 
                 } else {
-                    alert('Erro no cadastro: ' + retorno.Resultado + ': ' + retorno.Detalhes);                
-                }
-            }
-
-            function anyError (retorno) {
-                alert('Erro ao contatar back-end: ' + retorno.Resultado + ': ' + retorno.Detalhes);
+                    Swal.fire({
+                        title: "Erro ao cadastrar turma!",
+                        text: "Caso o erro persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                        icon: "error",
+                        showConfirmButton: true
+                    });               
+                }}
+            function anyError () {
+                Swal.fire({
+                    title: "Erro ao contatar back-end!",
+                    text: "Caso o erro persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                    icon: "error",
+                    showConfirmButton: true
+                });
             }
 
         } else {
-            alert('Você ainda não está logado, por favor, conecte-se!');
-            window.location.assign('/');
+            Swal.fire({
+                title: "Você ainda não está logado!",
+                icon: 'error'
+            });
+            setTimeout(render_index(), 1000);
+            
         }
 
     });
 
-    $(document).on('click', '#excluir_turma', function() {
-
+    function excluir_turma() {
         var email = sessionStorage.getItem('email');
         var meuip = sessionStorage.getItem('meuip');
         var id_turma = sessionStorage.getItem('id_turma'); 
@@ -58,33 +71,43 @@ $(function() {
         if (email != null) {
             var jwt = sessionStorage.getItem('jwt');
 
-        $.ajax({
-            url: `http://${meuip}:5000/deleteTurma/${email}/${id_turma}`,
-            type: 'DELETE', 
-            dataType: 'json', 
-            headers: {Authorization: 'Bearer ' + jwt},
-            success: turmaExcluida, 
-            error: erroAoExcluir
-        });
-
-        function turmaExcluida (retorno) {
-            if (retorno.Resultado == 'ok') {
-                alert('Turma removida com sucesso!');
-                window.location.assign('/render_usuario');
-            } else {
-                alert(retorno.Resultado + ': ' + retorno.Detalhes);
-            }            
+            $.ajax({
+                url: `http://${meuip}:5000/deleteTurma/${email}/${id_turma}`,
+                type: 'DELETE', 
+                dataType: 'json', 
+                headers: {Authorization: 'Bearer ' + jwt},
+                success: turmaExcluida, 
+                error: erroAoExcluir
+            });
+            
+            function turmaExcluida (retorno) {
+                if (retorno.Resultado == 'ok') {
+                    window.location.assign('/render_usuario')
+                    Swal.fire({
+                        title: "Turma excluída com sucesso!",
+                        icon: "success",
+                        showConfirmButton: true
+                    });
+                    
+                }        
+            }
+            function erroAoExcluir () {
+                Swal.fire({
+                    title: "Erro ao excluir turma!",
+                    text: "Caso o erro persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                    icon: "error",
+                    showConfirmButton: true
+                });
+            }    
+        } else {
+            window.location.assign('/');
+            Swal.fire("Você ainda não está logado!", {
+                icon: "error"
+            });
+            
         }
 
-        function erroAoExcluir (retorno) {
-            alert('Erro ao excluir turma: ' + retorno.Detalhes);
-        }
-
-    } else {
-        alert('Você ainda não está logado, por favor, conecte-se!');
-        window.location.assign('/');
-    }
-    });
+    };
 
     var email = sessionStorage.getItem('email');
     var nome = sessionStorage.getItem('nome');
@@ -103,7 +126,12 @@ $(function() {
             headers: {Authorization: 'Bearer ' + jwt},
             success: listar_turma, // chama a função listar para processar o resultado
             error: function () {
-                alert("erro ao ler dados, verifique o backend");
+                Swal.fire({
+                    title: "Erro ao listar dados!",
+                    text: "Por favor, entre em contato com o administrador.",
+                    icon: "error",
+                    showConfirmButton: true
+                });
             }
         });
         function listar_turma(retorno) {
@@ -132,23 +160,54 @@ $(function() {
                     </td> </tr>`;
                 $('#tabelaTurma').append(lin);
             } else {
-                alert('Erro ao listar dados: ' + retorno.Detalhes);
+                Swal.fire({
+                    title: "Erro ao listar dados!",
+                    text: "Caso o erro persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                    icon: "error",
+                    showConfirmButton: true
+                });
             }
         };
     } else {
-        alert('Você ainda não está logado, por favor, conecte-se!');
-        window.location.assign('/');
+        Swal.fire({
+            title: "Você ainda não está logado!",
+            icon: 'error'
+        });
+        setTimeout(render_index(), 1000);
     }
 
     $(document).on('click', '#editar_turma', function() {
         if (email != null) {
-            window.location.assign('/render_updateTurma')
+            window.location.assign('/render_updateTurma');
         } else {
-            alert('Você ainda não está logado, por favor, conecte-se!');
-            window.location.assign('/');
+            Swal.fire({
+                title: "Você ainda não está logado!",
+                icon: 'error'
+            });
+            setTimeout(render_index(), 1000)
+            
         }
         
     })   
 
-     
+    $(document).on('click', '#excluir_turma', function() {
+        Swal.fire({
+            title: "Você tem certeza?",
+            text: "Uma vez deletada, ela não poderá ser recuperada!",
+            icon: "warning",
+            showConfirmButton: true,
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar'
+          })
+        .then((willDelete) => {
+            if (willDelete) {
+                excluir_turma()
+            }
+        });
+    });
+
+    function render_index(){
+        window.location.assign('/');
+    }
+
 });

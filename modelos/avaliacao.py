@@ -89,6 +89,7 @@ def deleteAvaliacao(id: int, email: str):
     try:
         av = getAvaliacaobyID(id)
         if av is not None and av.prof.email == email:
+            db.session.execute(f'DELETE FROM tabela_associacao where avaliacao_id = {id}')  
             Avaliacao.query.filter(Avaliacao.id == id).delete()
             db.session.commit()
             return True
@@ -109,6 +110,6 @@ def cadastrarAvaliacao(desc: str, dataInicio: str, dataFim: str, turmas: list, p
         return e
 
 tabela_associacao  = db.Table('tabela_associacao', db.metadata, 
-    db.Column('turma.id', db.Integer, db.ForeignKey(Turma.id, ondelete='CASCADE'), primary_key=True),
-    db.Column('Avaliacao.id', db.Integer, db.ForeignKey(Avaliacao.id, ondelete='CASCADE'), primary_key=True)
+    db.Column('turma_id', db.Integer, db.ForeignKey(Turma.id, ondelete='CASCADE'), primary_key=True),
+    db.Column('avaliacao_id', db.Integer, db.ForeignKey(Avaliacao.id, ondelete='CASCADE'), primary_key=True)
     )

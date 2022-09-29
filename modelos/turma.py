@@ -71,11 +71,13 @@ def delete_turma(email: str, id: int):
     try:
         turma = getTurmabyID(id)
         if turma is not None and turma.prof.email == email:
+            db.session.execute(f'DELETE FROM tabela_associacao WHERE turma_id = {id}')  
             Turma.query.filter(Turma.id == id).delete()
             db.session.commit()
             return True
         return False
-    except Exception:
+    except Exception as e:
+        print(e)
         return False
 
 def cadastrarTurma(nome: str, alunos: str, prof_id: int):

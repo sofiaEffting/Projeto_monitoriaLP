@@ -8,7 +8,7 @@ $(function () { // quando o documento estiver pronto/carregado
         var jwt = sessionStorage.getItem('jwt');
 
         $('#nome').append(nome);
-        
+
         // TURMAS
 
         // chamada ao backend
@@ -20,10 +20,17 @@ $(function () { // quando o documento estiver pronto/carregado
             headers: {Authorization: 'Bearer ' + jwt},
             success: listar_turmas, // chama a função listar para processar o resultado
             error: function () {
-                alert("erro ao ler dados, verifique o backend");
+                Swal.fire({
+                    title: "Erro ao contatar backend!",
+                    text: "Caso o erro persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                    icon: "error",
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
             }
         });
-        //  curl localhost:5000/listar_turmas?email=efftingsofia@gmail.com
+        //  curl localhost:5000/listar/Turma/0?email=efftingsofia@gmail.com
         function listar_turmas(retorno) {
             if (retorno.Resultado === 'ok' && retorno.Detalhes != 0) {
                 // percorrer lista de turmas retornadas
@@ -40,7 +47,14 @@ $(function () { // quando o documento estiver pronto/carregado
                     </td> </tr>`;
                 $('#tabelaTurmasUsuario').append(lin);
             } else {
-                alert('Erro ao listar dados: ' + retorno.Detalhes);
+                Swal.fire({
+                    title: "Erro ao listar dados!",
+                    text: "Caso o erro persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                    icon: "error",
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
             }
         };
 
@@ -57,10 +71,7 @@ $(function () { // quando o documento estiver pronto/carregado
             window.location.assign('/render_av')
         });
 
-
-
         // AVALIACOES
-
         // chamada ao backend
         $.ajax({
             url: `http://${meuip}:5000/listar/Avaliacao/0?email=${email}`,
@@ -70,7 +81,14 @@ $(function () { // quando o documento estiver pronto/carregado
             headers: {Authorization: 'Bearer ' + jwt},
             success: listar_avs, 
             error: function () {
-                alert("Erro ao ler dados, verifique o backend");
+                Swal.fire({
+                    title: "Erro ao contatar backendee!",
+                    text: "Caso o erro persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                    icon: "error",
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
             }
         });
         
@@ -90,14 +108,37 @@ $(function () { // quando o documento estiver pronto/carregado
                 lin = `<tr><td> Nenhuma avaliação cadastrada! </td></tr>`;
                 $('#corpoTabelaAvs').append(lin);
             } else {
-                alert('Erro ao listar dados: ' + retorno.Detalhes);
+                Swal.fire({
+                    title: "Erro ao listar dados!",
+                    text: "Caso o erro persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                    icon: "error",
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
             }
         };
 
     } else {
-        alert('Você ainda não está logado, por favor, conecte-se!');
+        Swal.fire({
+            title: "Você ainda não está logado!",
+            icon: 'error'
+        });
+        setTimeout(render_index(), 1000)
+        
+    }
+
+    function render_index(){
         window.location.assign('/');
     }
+
+    $(document).on('click', '#cadastrarTurma', function(){
+        window.location.assign('/render_cadastroTurma');
+    })
+
+    $(document).on('click', '#cadastrarAv', function() {
+        window.location.assign('/render_cadastroAv');
+    })
 
     
     

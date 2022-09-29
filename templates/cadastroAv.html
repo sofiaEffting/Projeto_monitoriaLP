@@ -1,18 +1,42 @@
 {% extends 'base.html' %}
 {% block title %}Cadastro Avaliação{% endblock %}
 {% block content %}
+<div class="container">
 	<h1>Cadastro Avaliação</h1>
 	<form onsubmit="return false" enctype="multipart/form-data">
-		<input type="text"  id="campoDescricao" required autofocus placeholder="Decrição:" value="prova"><br>
-		<input type="datetime-local" id="campoDataInicio" required placeholder="Data início:" value="hj"><br>
-		<input type="datetime-local" id="campoDataFim" placeholder="Data limite:" value="amn"><br>
-		<input type="text" id="campoTurmas" placeholder="Turmas id" value="1, 2"><br>
-		<input type="file" id="campoArquivo" accept=".txt, .pdf, .doc, .docx" multiple><br><br>
-		<button id="btCadastrarAV"  type="submit" >Cadastrar</button>
+		<div class="form-group mb-2">
+			<label for="campoDescricao">Nome da Avaliação:</label>
+			<input type="text"  id="campoDescricao" class="form-control" required autofocus placeholder="Nome">
+		</div>
+		<div class="row">
+			<div class="form-group mb-2 col">
+				<label for="campoDataInicio">Data de início:</label>
+				<input type="datetime-local" id="campoDataInicio" class="form-control" required>
+			</div>
+			<div class="form-group mb-2 col">
+				<label for="campoDataFim">Data limite:</label>
+				<input type="datetime-local" id="campoDataFim" class="form-control">
+			</div>
+		</div>
+		
+		<div class="form-group mb-2">
+			<label for="select_turmas">Turmas:</label>
+			<select id="select_turmas" class="form-control custom-select">
+				<option selected>Turmas</option>	
+			</select>
+		</div>
+		<div class="form-group mb-2">
+			<label for="campoArquivo">Arquivo:</label>
+			<input type="file" class="form-control" id="campoArquivo" accept=".txt, .pdf, .doc, .docx" multiple>
+			<small id="ajudaArquivo" class="form-text text-muted">Aqui você pode adicionar um arquivo com suas perguntas.</small>
+		</div>
+		<button id="btCadastrarAV" type="submit" class="btn btn-primary">Cadastrar</button>
 	</form>
+</div>
 {% endblock %}
 {% block scripts %}
 <script src="{{url_for('static',filename='js/av.js')}}" type="text/javascript"></script>
-<script src="{{url_for('static',filename='js/login.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static',filename='js/logout.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static',filename='js/op_turmas.js')}}" type="text/javascript"></script>
 {% endblock %}
 	

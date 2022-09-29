@@ -1,18 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}Cadastro Turma{% endblock %}
 {% block content %}
+<div class="container">
 <h1>Cadastro Turma</h1>
 <form onsubmit="return false">
-	<div>
-	<input type="text" name="nomeTurma" id="campoNomeTurma" required autofocus placeholder="Nome da Turma" value="301 info"><br>
+	<div class="form-group mb-2">
+		<label for="campoNomeTurma">Nome da Turma:</label>
+		<input type="text" name="nomeTurma" id="campoNomeTurma" class="form-control" required autofocus placeholder="Nome">
 	</div>
-	<div>
-	<textarea name="alunos" id="campoAlunos" placeholder="Lista de alunos:"></textarea><br>
+	<div class="form-group mb-2">
+		<label for="campoAlunos">Alunos que a comporão:</label>
+		<textarea name="alunos" class="form-control" id="campoAlunos" placeholder="Lista de alunos:"></textarea>
+		<small id="ajudaAlunos" class="form-text text-muted">Você deve adicionar os alunos no seguinte formato: Nome Aluno1 &lt;email1@exemplo.com&gt;, Nome Aluno2 &lt;email2@exemplo.com&gt;. Você pode alterar este formato nas configurações da sua conta.</email2></email></small>
 	</div>
-	<button id="btCadastrarTurma"  type="submit" >Cadastrar</button>
+	<button id="btCadastrarTurma" class="btn btn-primary" type="submit">Cadastrar</button>
 </form>
+</div>
 {% endblock %}
 {% block scripts %}
 <script src="{{url_for('static',filename='js/turma.js')}}" type="text/javascript"></script>
-<script src="{{url_for('static',filename='js/login.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static',filename='js/logout.js')}}" type="text/javascript"></script>
 {% endblock %}

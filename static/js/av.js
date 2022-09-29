@@ -14,10 +14,7 @@ $(function(){
             /*arquivoInput = document.querySelector('#campoArquivo');
             var arquivo = document.getElementById('arquivo').files[0];
             var arquivos = arquivoInput.files;*/
-        
-
             jwt = sessionStorage.getItem('jwt');
-
             var dados = JSON.stringify({descricao: desc, dataInicio: dataInicio, dataFim: dataFim, email: email, turmas: turmas});
             
             // chamada ao backend
@@ -33,66 +30,100 @@ $(function(){
             });
     
             function avCadastrada (retorno) {
-    
                 if (retorno.Resultado == 'ok') {
-                    alert('Avaliação cadastrada com sucesso!');
-                    $('#mensagem').text('Avaliação cadastrada com sucesso!');
-    
+                    Swal.fire({
+                        title: "Avaliação cadastrada com sucesso!",
+                        icon: "success",
+                        showConfirmButton: true
+                    });
                     $('#campoDescricao').val('');
                     $('#campoDataInicio').val('');
                     $('#campoDataFim').val('');
-    
                 } else {
-                    alert('Erro no cadastro: ' + retorno.Resultado + ': ' + retorno.Detalhes);                
-                }
-            }
-    
-            function anyError (retorno) {
-                alert('Erro ao contatar back-end: ' + retorno.Detalhes);
+                    Swal.fire({
+                        title: "Erro ao cadastrar avaliação!", 
+                        icon: "error", 
+                        showConfirmButton: true
+                    });              
+                }}
+            function anyError () {
+                Swal.fire({
+                    title: "Erro ao contatar back-end!",
+                    text: "Por favor, entre em contato com o administrador.",
+                    icon: "error",
+                });
             }
         } else {
-            alert('Você ainda não está logado, por favor, conecte-se!');
+            Swal.fire({ title: "Você ainda não está logado!", 
+                icon: "error"
+            });
             window.location.assign('/');
         }
-
     });
 
     $(document).on('click', '#excluir_av', function() {
-
-        var email = sessionStorage.getItem('email');
-        var meuip = sessionStorage.getItem('meuip');
-        var id_av = sessionStorage.getItem('id_av');
-
-        if (email != null) {
-            var jwt = sessionStorage.getItem('jwt');
-
-            $.ajax({
-                url: `http://${meuip}:5000/deleteAv/${email}/${id_av}`,
-                type: 'DELETE', 
-                dataType: 'json', 
-                headers: {Authorization: 'Bearer ' + jwt},
-                success: avExcluida, 
-                error: erroAoExcluir
-            });
-
-            function avExcluida (retorno) {
-                if (retorno.Resultado == 'ok') {
-                    alert('Avaliação removida com sucesso!');
-                    window.location.assign('/render_usuario');
-                } else {
-                    alert(retorno.Resultado + ': ' + retorno.Detalhes);
-                }            
+        Swal.fire({
+            title: "Você tem certeza?",
+            text: "Uma vez deletada, ela não poderá ser recuperada!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+        .then((willDelete) => {
+            if (willDelete) {
+                excluir_av()
             }
+        });
 
-            function erroAoExcluir (retorno) {
-                alert('Erro ao excluir avaliação: ' + retorno.Detalhes);
+        function excluir_av() {
+            var email = sessionStorage.getItem('email');
+            var meuip = sessionStorage.getItem('meuip');
+            var id_av = sessionStorage.getItem('id_av');
+
+            if (email != null) {
+                var jwt = sessionStorage.getItem('jwt');
+
+                $.ajax({
+                    url: `http://${meuip}:5000/deleteAv/${email}/${id_av}`,
+                    type: 'DELETE', 
+                    dataType: 'json', 
+                    headers: {Authorization: 'Bearer ' + jwt},
+                    success: avExcluida, 
+                    error: erroAoExcluir
+                });
+
+                function avExcluida (retorno) {
+                    if (retorno.Resultado == 'ok') {
+                        window.location.assign('/render_usuario');
+                        Swal.fire({
+                            title: "Avaliação excluida com sucesso!",
+                            icon: "success",
+                        });
+                        
+                    } else {
+                        Swal.fire({
+                            title: "Erro ao excluir avaliação!",
+                            text: "Por favor, entre em contato com o administrador.",
+                            icon: "error",
+                            showConfirmButton: true
+                        });
+                    }            
+                }
+                function erroAoExcluir () {
+                    Swal.fire({
+                        title: "Erro ao excluir avaliação!",
+                        icon: "error",
+                        showConfirmButton: true
+                    });
+                }
+            } else {
+                Swal.fire({
+                    title: "Você ainda não está logado!",
+                    icon: 'error'
+                });
+                setTimeout(render_index(), 1000)
             }
-    
-        } else {
-            alert('Você ainda não está logado, por favor, conecte-se!');
-            window.location.assign('/');
-        }
-        
+        }  
     })
 
     $(document).on('click', '#editar_av', function() {
@@ -100,15 +131,19 @@ $(function(){
         if (email != null) {
             window.location.assign('/render_updateAv')
         } else {
-            alert('Você ainda não está logado, por favor, conecte-se!');
-            window.location.assign('/');
+            Swal.fire({
+                title: "Você ainda não está logado!",
+                icon: 'error'
+            });
+            setTimeout(render_index(), 1000)
+            
         }
     })
 
     var email = sessionStorage.getItem('email');
     var meuip = sessionStorage.getItem('meuip');
 
-    if (email != null) {
+    /*if (email != null) {
         var jwt = sessionStorage.getItem('jwt');
         id_av = sessionStorage.getItem('id_av'); 
 
@@ -120,7 +155,12 @@ $(function(){
             headers: {Authorization: 'Bearer ' + jwt},
             success: listar_av, // chama a função listar para processar o resultado
             error: function () {
-                alert("erro ao ler dados, verifique o backend");
+                Swal.fire({
+                    title: "Erro ao listar dados!",
+                    text: "Caso o problema persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                    icon: "error",
+                    showConfirmButton: true
+                });
             }
         });
         function listar_av(retorno){
@@ -139,13 +179,22 @@ $(function(){
                     </td> </tr>`;
                 $('#tabelaAv').append(lin);
             } else {
-                alert('Erro ao listar dados: ' + retorno.Detalhes);
+                Swal.fire({
+                    title: "Erro ao listar dados!",
+                    text: "Caso o problema persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
+                    icon: "error",
+                    showConfirmButton: true
+                });
             }
         }
     } else {
-        alert('Você ainda não está logado, por favor, conecte-se!');
-        window.location.assign('/');
-    }
+        Swal.fire({
+            title: "Você ainda não está logado!",
+            icon: 'error'
+        });
+        setTimeout(render_index(), 1000)
+        
+    }*/
 
     $(document).on('click', '#btAtualizarTurma', function() {
         var email = sessionStorage.getItem('email');

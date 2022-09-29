@@ -5,11 +5,12 @@ from modelos.turma import *
 
 # USUARIO / PROFESSOR ======================================
 
+'''$ curl -d '{"nome":"sofia_teste","email":"efftingsofia@gmail.com","senha":"12345678"}' 
+-X POST -H "Content-Type:application/json" localhost:5000/cadastroUsuario'''
 @app.route('/cadastroUsuario', methods=['POST'])
-@jwt_required()
 def cadastroUsuario():
 
-    dados = request.get_json(force=True)
+    dados = request.get_json()
 
     try:
         if cadastrarProf(**dados):
@@ -18,7 +19,6 @@ def cadastroUsuario():
             resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Usuário já cadastrado!'})
     except Exception as e:
         resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
-
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
@@ -175,7 +175,6 @@ def cadastroTurma():
 def atualizar_turma(email, id_turma):
     try:
         dados = request.get_json(force=True)
-        print(dados)
         if update_turma(email, id_turma, dados):
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
@@ -292,4 +291,4 @@ def listar(classe, id):
 
 if __name__ == '__main__':
     
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

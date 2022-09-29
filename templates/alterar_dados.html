@@ -1,22 +1,24 @@
 {% extends 'base.html' %}
 {% block title %}Alterar dados{% endblock %}
 {% block content %}
+<div class="container">
     <h1>Alterar dados</h1>
     <form onsubmit="return false">
-    <div>
-        <input type="text" id="nome-update" name="email" placeholder="Email:" value=>
+    <div class="form-group mb-2">
+        <input class="form-control" type="text" id="nome-update" name="email" placeholder="Email:" value=>
     </div>
-    <div>
-        <input type="email" id="email-update" name="email" placeholder="Email:" value="email@alterado">
+    <div class="form-group mb-2">
+        <input class="form-control" type="email" id="email-update" name="email" placeholder="Email:" value="email@alterado">
     </div>
-    <div>
-        <input type="password" id="senha-update" name="senha" placeholder="Senha:" value="12345678">
+    <div class="form-group mb-2">
+        <input class="form-control" type="password" id="senha-update" name="senha" placeholder="Senha:" value="12345678">
     </div>
-    <button id="btAtualizarProf">Alterar</button>
-    <button id="btcancelar">Cancelar</button>
+    <button class="btn btn-primary" id="btAtualizarProf">Alterar</button>
+    <button class="btn btn-primary" id="btcancelar">Cancelar</button>
     </form>
+</div>
 {% endblock %}
 {% block scripts %}
 <script src="{{url_for('static',filename='js/prof.js')}}" type="text/javascript"></script>
-<script src="{{url_for('static',filename='js/login.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static',filename='js/logout.js')}}" type="text/javascript"></script>
 {% endblock %}
