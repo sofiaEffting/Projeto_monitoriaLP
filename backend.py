@@ -1,3 +1,5 @@
+import shutil
+from http.client import ResponseNotReady
 from config import *
 from modelos.avaliacao import *
 from modelos.professor import *
@@ -101,13 +103,13 @@ def cadastroAvaliacao():
         prof_id = getIdProf(dados['email'])
 
         # transformar em lista
-        t = dados['turmas']
-        t = t.split(', ')
+        t = []
+        t.append(dados['turmas'])
 
-        # pegando os objetos
+        # pegando os objetos Turma
         turmas = []
         for i in t:
-            turmas.append(getTurma(i)) 
+            turmas.append(getTurmabyID(i)) 
 
         if cadastrarAvaliacao(desc= dados['descricao'], dataInicio= dados['dataInicio'], 
         dataFim= dados['dataFim'], turmas= turmas, prof_id = prof_id):
@@ -121,15 +123,48 @@ def cadastroAvaliacao():
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
+
+@app.route("/salvar_arqs/<string:nome_av>/<turmas>", methods=['POST'])
+def salvar_arqs(nome_av: str, turmas):
+    try:
+        resposta = jsonify({"resultado":"ok", "detalhes": "Avaliação cadastrada com sucesso!"})
+        file_val = request.files['arqs'] # pega o arquivo
+        caminho_pasta = os.path.join(path, 'avaliacoes/'+ str(nome_av)) # definir o caminho da pasta da av
+        if os.path.isdir(caminho_pasta) is False: # verifica se a pasta já não existe
+            os.mkdir(caminho_pasta) # criar a pasta da avaliação
+            caminho_arq = os.path.join(caminho_pasta, file_val.filename) # define o caminho do arquivo
+            file_val.save(caminho_arq) # salvar arquivo
+            for t in turmas: 
+                turma = getTurmabyID(t)
+                pasta_turma = os.path.join(caminho_pasta, str(turma.nome))
+                if os.path.isdir(pasta_turma) is False:
+                    os.mkdir(pasta_turma)
+                    nome_alunos = getNomeAlunos(turma.alunos)
+                    for nome in nome_alunos:
+                        caminho_pastas_alunos = os.path.join(pasta_turma, str(nome))
+                        os.mkdir(caminho_pastas_alunos)
+        else:
+            resposta = jsonify({"resultado":"erro", "detalhes": "A avaliação já está cadastrada!"})
+    except Exception as e:
+        print(e)
+        resposta = jsonify({"resultado":"erro", "detalhes": str(e)})
+    resposta.headers.add("Access-Control-Allow-Origin", "*")
+    return resposta
+
 @app.route('/deleteAv/<string:email>/<int:av_id>', methods=['DELETE'])
 @jwt_required()
 def deleteAv(email, av_id):
     try:
+        av = getAvaliacaobyID(av_id)
+        caminho_pasta = os.path.join(path, 'avaliacoes/'+str(av.descricao))
         if deleteAvaliacao(av_id, email):
+            #os.rmdir(caminho_pasta, i)
+            shutil.rmtree(str(caminho_pasta))
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
             resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Avaliação não cadastrada!'})
     except Exception as e:
+        print(e)
         resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
 
     resposta.headers.add('Access-Control-Allow-Origin', '*')
@@ -280,6 +315,7 @@ def listar(classe, id):
             resposta.update({'Detalhes': lista_jsons})
         else:
             resposta.update({'Detalhes': 0})
+            print(resposta)
         resposta = jsonify(resposta)
 
     except Exception as e:
@@ -292,3 +328,4 @@ def listar(classe, id):
 if __name__ == '__main__':
     
     app.run(host='0.0.0.0', port=5000, debug=True)
+    #app.run()

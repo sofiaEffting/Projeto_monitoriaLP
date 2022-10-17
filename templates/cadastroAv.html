@@ -3,10 +3,11 @@
 {% block content %}
 <div class="container">
 	<h1>Cadastro Avaliação</h1>
-	<form onsubmit="return false" enctype="multipart/form-data">
+	<form onsubmit="return false" enctype="multipart/form-data" id="form_av">
+		
 		<div class="form-group mb-2">
 			<label for="campoDescricao">Nome da Avaliação:</label>
-			<input type="text"  id="campoDescricao" class="form-control" required autofocus placeholder="Nome">
+			<input type="text" value="av2" id="campoDescricao" class="form-control" required autofocus placeholder="Nome">
 		</div>
 		<div class="row">
 			<div class="form-group mb-2 col">
@@ -18,18 +19,14 @@
 				<input type="datetime-local" id="campoDataFim" class="form-control">
 			</div>
 		</div>
-		
-		<div class="form-group mb-2">
-			<label for="select_turmas">Turmas:</label>
-			<select id="select_turmas" class="form-control custom-select">
-				<option selected>Turmas</option>	
-			</select>
+		<div class="form-group mb-2" id="turmas">
 		</div>
 		<div class="form-group mb-2">
 			<label for="campoArquivo">Arquivo:</label>
-			<input type="file" class="form-control" id="campoArquivo" accept=".txt, .pdf, .doc, .docx" multiple>
+			<input type="file" class="form-control" name="arqs" accept=".txt, .pdf, .doc, .docx" multiple>
 			<small id="ajudaArquivo" class="form-text text-muted">Aqui você pode adicionar um arquivo com suas perguntas.</small>
 		</div>
+		
 		<button id="btCadastrarAV" type="submit" class="btn btn-primary">Cadastrar</button>
 	</form>
 </div>

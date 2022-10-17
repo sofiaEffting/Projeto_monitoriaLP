@@ -1,26 +1,32 @@
 {% extends 'base.html' %}
 {% block title %}Editar Avaliação{% endblock %}
 {% block content %}
-<h1>Editar Avaliação</h1>
-<form onsubmit="return false" enctype="multipart/form-data">
-    <div>
-        <input type="text"  id="desc-update" required autofocus placeholder="Decrição:">
-    </div>
-    <div>
-        <input type="datetime-local" id="dtInicio-update" required placeholder="Data início:" value="hj">
-    </div>
-    <div>
-		<input type="datetime-local" id="dtFim-update" placeholder="Data limite:">
-    </div>
-    <div>
-        <input type="text" id="turmas-update" placeholder="Turma(s)">
-    </div>
-    <div>
-        <input type="file" id="arq-update" accept=".txt, .pdf, .doc, .docx" multiple>
-    </div>
-    <br>
-    <button id="btAtualizarAv">Alterar</button><button id="btcancelar">Cancelar</button>
+<div class="container">
+    <h1>Editar Avaliação</h1>
+    <form onsubmit="return false" enctype="multipart/form-data">
+        <div class="form-group mb-2">
+            <label for="desc-update">Nome da Avaliação:</label>
+            <input type="text" class="form-control"  id="desc-update" required autofocus placeholder="Decrição:">
+        </div>
+        <div class="form-group mb-2">
+            <label for="dtInicio-update">Data de início:</label>
+            <input type="datetime-local" class="form-control" id="dtInicio-update" required placeholder="Data início:" value="hj">
+        </div>
+        <div class="form-group mb-2">
+            <label for="dtFim-update">Data limite:</label>
+            <input type="datetime-local" class="form-control" id="dtFim-update" placeholder="Data limite:">
+        </div>
+        <div class="form-group mb-2" id="turmas">
+        </div>
+        <div class="form-group mb-2">
+            <label for="campoArquivo">Arquivo:</label>
+            <input type="file" class="form-control" name="arqs" accept=".txt, .pdf, .doc, .docx" multiple>
+            <small id="ajudaArquivo" class="form-text text-muted">Aqui você pode adicionar um arquivo com suas perguntas.</small>
+        </div>
+        <button id="btAtualizarAv" class="btn btn-primary">Alterar</button>
+        <button id="btcancelar" class="btn btn-primary">Cancelar</button>
     </form>
+</div>
 {% endblock %}
 {% block scripts %}
 <script src="{{url_for('static',filename='js/updateAv.js')}}" type="text/javascript"></script>

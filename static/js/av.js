@@ -5,59 +5,78 @@ $(function(){
         email = sessionStorage.getItem('email');
 
         if (email != null){
-            desc = $('#campoDescricao').val();
-            dataInicio = $('#campoDataInicio').val();
-            dataFim = $('#campoDataFim').val();
-            turmas = $('#campoTurmas').val()
+            var desc = $('#campoDescricao').val();
+            var dataInicio = $('#campoDataInicio').val();
+            var dataFim = $('#campoDataFim').val();
+            var turmas = $('.turmas:checked').val();
+            var arqs = new FormData($('#form_av')[0]);
+            console.log(arqs.values());
 
             meuip = sessionStorage.getItem("meuip");
-            /*arquivoInput = document.querySelector('#campoArquivo');
-            var arquivo = document.getElementById('arquivo').files[0];
-            var arquivos = arquivoInput.files;*/
             jwt = sessionStorage.getItem('jwt');
             var dados = JSON.stringify({descricao: desc, dataInicio: dataInicio, dataFim: dataFim, email: email, turmas: turmas});
-            
-            // chamada ao backend
+
             $.ajax({
-                url: `http://${meuip}:5000/cadastroAvaliacao`,
-                type: 'POST',
-                dataType: 'json', // os dados são recebidos no formato json
-                contentType: 'text/plain',
-                headers: {Authorization: 'Bearer ' + jwt},
-                data: dados,
-                success: avCadastrada, // chama a função listar para processar o resultado
+                url: `http://${meuip}:5000/salvar_arqs/${desc}/${turmas}`,
+                method: 'POST',
+                data: arqs, // dados serão enviados em formato normal, para upload da foto
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: avCadastrada,
                 error: anyError
             });
-    
+            
             function avCadastrada (retorno) {
-                if (retorno.Resultado == 'ok') {
-                    Swal.fire({
-                        title: "Avaliação cadastrada com sucesso!",
-                        icon: "success",
-                        showConfirmButton: true
+                if (retorno.resultado == 'ok') {
+                    // chamada ao backend
+                    $.ajax({
+                        url: `http://${meuip}:5000/cadastroAvaliacao`,
+                        type: 'POST',
+                        dataType: 'json', // os dados são recebidos no formato json
+                        contentType: 'text/plain',
+                        headers: {Authorization: 'Bearer ' + jwt},
+                        data: dados,
+                        success: function () {
+                            Swal.fire({
+                                title: "Avaliação cadastrada com sucesso!",
+                                icon: "success",
+                                showConfirmButton: true
+                            });
+                            $('#campoDescricao').val('');
+                            $('#campoDataInicio').val('');
+                            $('#campoDataFim').val('');
+                        },
+                        error: function () {
+                            Swal.fire({
+                                title: "Erro ao cadastrar avaliação!1", 
+                                icon: "error", 
+                                showConfirmButton: true
+                            });   
+                        }
                     });
-                    $('#campoDescricao').val('');
-                    $('#campoDataInicio').val('');
-                    $('#campoDataFim').val('');
                 } else {
                     Swal.fire({
-                        title: "Erro ao cadastrar avaliação!", 
+                        title: "Erro ao cadastrar avaliação!2", 
+                        text: `${retorno.detalhes}`,
                         icon: "error", 
                         showConfirmButton: true
                     });              
                 }}
+
             function anyError () {
                 Swal.fire({
-                    title: "Erro ao contatar back-end!",
+                    title: "Erro ao contatar back-end!3",
                     text: "Por favor, entre em contato com o administrador.",
                     icon: "error",
                 });
             }
+
         } else {
             Swal.fire({ title: "Você ainda não está logado!", 
                 icon: "error"
             });
-            window.location.assign('/');
+            setTimeout(render_index()), 1000;
         }
     });
 
@@ -140,64 +159,7 @@ $(function(){
         }
     })
 
-    var email = sessionStorage.getItem('email');
-    var meuip = sessionStorage.getItem('meuip');
-
-    /*if (email != null) {
-        var jwt = sessionStorage.getItem('jwt');
-        id_av = sessionStorage.getItem('id_av'); 
-
-        $.ajax({
-            url: `http://${meuip}:5000/listar/Avaliacao/${id_av}?email=${email}`,
-            method: 'GET',
-            dataType: 'json', // os dados são recebidos no formato json
-            contentType: 'text/plain',
-            headers: {Authorization: 'Bearer ' + jwt},
-            success: listar_av, // chama a função listar para processar o resultado
-            error: function () {
-                Swal.fire({
-                    title: "Erro ao listar dados!",
-                    text: "Caso o problema persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
-                    icon: "error",
-                    showConfirmButton: true
-                });
-            }
-        });
-        function listar_av(retorno){
-            if (retorno.Resultado == 'ok' && retorno.Detalhes != 0) {
-                av = retorno.Detalhes[0]
-                lin = `<tr> 
-                    <td> ${av.dataInicio} </td>
-                    <td> ${av.dataFim} </td>
-                    <td> ${av.turmas} </td>
-                    </tr>`;
-                    $('#desc_av').append(av.descricao);
-                    $('#tabelaAv').append(lin); // adiciona a linha no corpo da tabela
-            } else if(retorno.Resultado == 'ok' && retorno.Detalhes == 0) {
-                lin = `<tr> <td>
-                    Avaliação não cadastrada!
-                    </td> </tr>`;
-                $('#tabelaAv').append(lin);
-            } else {
-                Swal.fire({
-                    title: "Erro ao listar dados!",
-                    text: "Caso o problema persista entre em contato com o administrador através do email: efftingsofia@gmail.com.",
-                    icon: "error",
-                    showConfirmButton: true
-                });
-            }
-        }
-    } else {
-        Swal.fire({
-            title: "Você ainda não está logado!",
-            icon: 'error'
-        });
-        setTimeout(render_index(), 1000)
-        
-    }*/
-
-    $(document).on('click', '#btAtualizarTurma', function() {
-        var email = sessionStorage.getItem('email');
-
-    })
+    function render_index(){
+        window.location.assign('/');
+    }
 });
