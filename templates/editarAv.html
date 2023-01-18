@@ -2,36 +2,38 @@
 {% block title %}Editar Avaliação{% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Editar Avaliação</h1>
-    <form onsubmit="return false" enctype="multipart/form-data">
+    <h1 class="my-4">Editar Avaliação</h1>
+    <form onsubmit="return false" enctype="multipart/form-data" class="w-50">
         <div class="form-group mb-2">
             <label for="desc-update">Nome da Avaliação:</label>
-            <input type="text" class="form-control"  id="desc-update" required autofocus placeholder="Decrição:">
+            <input type="text" class="form-control "  id="desc-update" required autofocus placeholder="Decrição:">
         </div>
         <div class="form-group mb-2">
             <label for="dtInicio-update">Data de início:</label>
-            <input type="datetime-local" class="form-control" id="dtInicio-update" required placeholder="Data início:" value="hj">
+            <input type="datetime-local" class="form-control " id="dtInicio-update" required placeholder="Data início:">
         </div>
         <div class="form-group mb-2">
             <label for="dtFim-update">Data limite:</label>
-            <input type="datetime-local" class="form-control" id="dtFim-update" placeholder="Data limite:">
+            <input type="datetime-local" class="form-control " id="dtFim-update" placeholder="Data limite:">
         </div>
         <div class="form-group mb-2" id="turmas">
             <label>Turmas:</label><br>
         </div>
         <div class="form-group mb-2">
             <label for="campoArquivo">Arquivo:</label>
-            <input type="file" class="form-control" name="arqs" accept=".txt, .pdf, .doc, .docx" multiple>
+            <input type="file" class="form-control " name="arqs" accept=".txt, .pdf, .doc, .docx" multiple>
             <small id="ajudaArquivo" class="form-text text-muted">Aqui você pode adicionar um arquivo com suas perguntas.</small>
         </div>
-        <button id="btAtualizarAv" class="btn btn-primary">Alterar</button>
-        <button id="btcancelar" class="btn btn-primary">Cancelar</button>
+        <div class="">
+            <button id="btAtualizarAv" class="btn btn-primary w-25">Alterar</button>
+            <button id="btcancelar" class="btn btn-primary w-25">Cancelar</button>
+        </div>
     </form>
 </div>
 {% endblock %}
 {% block scripts %}
 <script src="{{url_for('static',filename='js/updateAv.js')}}" type="text/javascript"></script>
 <script src="{{url_for('static',filename='js/logout.js')}}" type="text/javascript"></script>
-<!--<script src="{{url_for('static',filename='js/op_turmas.js')}}" type="text/javascript"></script>-->
+script src="{{url_for('static',filename='js/op_turmas.js')}}" type="text/javascript"></script>
 {% endblock %}
  

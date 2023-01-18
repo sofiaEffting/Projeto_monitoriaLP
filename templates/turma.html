@@ -1,20 +1,26 @@
 {% extends 'base.html' %}
 {% block title %}Turma{% endblock %}
 {% block content %}
-<div class="container">
-    <h1 id="nome_turma"></h1>
-    <table class="table">
-        <thead class="table-primary">
-            <tr>
-                <th scope="col">Alunos</th>
-                <th>Emails</th>
-            </tr>
-        </thead>
-        <tbody id="tabelaTurma">
-        </tbody>
-    </table>
-    <button id="editar_turma" class="btn btn-primary">Editar</button>
-    <button id="excluir_turma" class="btn btn-primary">Excluir</button>
+<div class="container-fluid">
+    <h1 id="nome_turma" class="m-4" ></h1>
+    <div class="row m-2">
+        <div id="div-tabela" class="col-sm-9">
+            <table class="table">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Alunos</th>
+                        <th>Emails</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaTurma">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-3">
+            <button id="editar_turma" class="btn btn-primary mb-2 w-100">Editar</button>
+            <button id="excluir_turma" class="btn btn-primary mb-2 w-100">Excluir</button>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

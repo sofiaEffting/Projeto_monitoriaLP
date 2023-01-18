@@ -2,8 +2,8 @@
 {% block title %}Cadastro Turma{% endblock %}
 {% block content %}
 <div class="container">
-<h1>Cadastro Turma</h1>
-<form onsubmit="return false">
+<h1 class="my-4">Cadastro Turma</h1>
+<form onsubmit="return false" class="w-50">
 	<div class="form-group mb-2">
 		<label for="campoNomeTurma">Nome da Turma:</label>
 		<input type="text" name="nomeTurma" id="campoNomeTurma" class="form-control" required autofocus placeholder="Nome">
@@ -13,7 +13,7 @@
 		<textarea name="alunos" class="form-control" id="campoAlunos" placeholder="Lista de alunos:"></textarea>
 		<small id="ajudaAlunos" class="form-text text-muted">Você deve adicionar os alunos no seguinte formato: Nome Aluno1 &lt;email1@exemplo.com&gt;, Nome Aluno2 &lt;email2@exemplo.com&gt;. Você pode alterar este formato nas configurações da sua conta.</email2></email></small>
 	</div>
-	<button id="btCadastrarTurma" class="btn btn-primary" type="submit">Cadastrar</button>
+	<button id="btCadastrarTurma" class="btn btn-primary w-25" type="submit">Cadastrar</button>
 </form>
 </div>
 {% endblock %}

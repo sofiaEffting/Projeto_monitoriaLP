@@ -179,4 +179,9 @@ $(function(){
     function render_index(){
         window.location.assign('/');
     }
+
+    // mapeamento do botão cancelar
+    $(document).on('click', '#btcancelar', function(){
+        window.location.assign('/render_usuario')
+    })
 });

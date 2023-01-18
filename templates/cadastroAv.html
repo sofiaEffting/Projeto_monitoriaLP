@@ -2,20 +2,20 @@
 {% block title %}Cadastro Avaliação{% endblock %}
 {% block content %}
 <div class="container">
-	<h1>Cadastro Avaliação</h1>
-	<form onsubmit="return false" enctype="multipart/form-data" id="form_av">
+	<h1 class="my-4">Cadastro Avaliação</h1>
+	<form onsubmit="return false" enctype="multipart/form-data" id="form_av" class="w-50">
 
 		<div class="form-group mb-2">
 			<label for="campoDescricao">Nome da Avaliação:</label>
 			<input type="text" value="av2" id="campoDescricao" class="form-control" required autofocus
 				placeholder="Nome">
 		</div>
-		<div class="row">
-			<div class="form-group mb-2 col">
+		<div class="row mb-2">
+			<div class="form-group col-sm-6">
 				<label for="campoDataInicio">Data de início:</label>
 				<input type="datetime-local" id="campoDataInicio" class="form-control" required>
 			</div>
-			<div class="form-group mb-2 col">
+			<div class="form-group col-sm-6">
 				<label for="campoDataFim">Data limite:</label>
 				<input type="datetime-local" id="campoDataFim" class="form-control">
 			</div>
@@ -29,8 +29,8 @@
 			<small id="ajudaArquivo" class="form-text text-muted">Aqui você pode adicionar um arquivo com suas
 				perguntas.</small>
 		</div>
-
-		<button id="btCadastrarAV" type="submit" class="btn btn-primary">Cadastrar</button>
+		<button id="btCadastrarAV" type="submit" class="btn btn-primary w-25">Cadastrar</button>
+		<button class="btn btn-primary w-25" id="btcancelar">Cancelar</button>
 	</form>
 </div>
 {% endblock %}

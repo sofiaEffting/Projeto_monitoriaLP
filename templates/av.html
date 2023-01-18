@@ -1,36 +1,38 @@
 {% extends 'base.html' %}
 {% block title %}Avalição{% endblock %}
 {% block content %}
-<div class="container-fluid row">
-    <h1 id="desc_av"></h1>
-    <div id="div-tabelas" class="col-sm-9">
-        <table class="table">
-            <thead class="table-primary">
-                <tr>
-                    <th scope="col">Data início</th>
-                    <th>Data final</th>
-                    <th>Turmas</th>
-                    <th>Arquivo</th>
-                </tr>
-            </thead>
-            <tbody id="tabelaAv">
-            </tbody>
-        </table>
-        <table class="table">
-            <thead class="table-primary">
-                <tr>
-                    <th scope="col">Aluno</th>
-                    <th>Resposta</th>
-                </tr>
-            </thead>
-            <tbody id="tabelaRespostas">
-            </tbody>
-        </table>
-    </div>
-    <div id="div-buttons" class="col-sm-3" style="align-content: center;">
-            <button id="editar_av" class="btn btn-primary mb-2 w-100 " style="display: block;">Editar</button>
-            <button id="excluir_av" class="btn btn-primary mb-2 w-100" style="display: block;">Excluir</button>
-            <button id="gerar_pdf" class="btn btn-primary mb-2 w-100" style="display: block;">Gerar PDF</button>
+<div class="container-fluid">
+    <h1 id="desc_av" class="m-4"></h1>
+    <div class="row m-2">
+        <div id="div-tabelas" class="col-sm-9">
+            <table class="table">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Data início</th>
+                        <th>Data final</th>
+                        <th>Turmas</th>
+                        <th>Arquivo</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaAv">
+                </tbody>
+            </table>
+            <table class="table">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Aluno</th>
+                        <th>Resposta</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaRespostas">
+                </tbody>
+            </table>
+        </div>
+        <div id="div-buttons" class="col-sm-3">
+                <button id="editar_av" class="btn btn-primary mb-2 w-100 " style="display: block;">Editar</button>
+                <button id="excluir_av" class="btn btn-primary mb-2 w-100" style="display: block;">Excluir</button>
+                <button id="gerar_pdf" class="btn btn-primary mb-2 w-100" style="display: block;">Gerar PDF</button>
+        </div>
     </div>
 </div>
 {% endblock %}
