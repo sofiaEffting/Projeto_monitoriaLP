@@ -29,8 +29,9 @@ $(function() {
                     <td> ${av.dataInicio} </td>
                     <td> ${av.dataFim} </td>
                     <td> ${av.turmas} </td>
+                    <td><a href="http://${meuip}:5000/get_arquivo/${id_av}" target="_blank">Abrir arquivo</a></td>
                     </tr>`;
-                    $('#desc_av').append(av.descricao);
+                    $('#desc_av').append(av.descricao); // adiciona o nome da avaliação no topo da página
                     $('#tabelaAv').append(lin); // adiciona a linha no corpo da tabela
             } else if(retorno.Resultado == 'ok' && retorno.Detalhes == 0) {
                 lin = `<tr> <td>

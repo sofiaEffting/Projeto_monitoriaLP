@@ -1,5 +1,5 @@
 import shutil
-from http.client import ResponseNotReady
+from flask import send_file
 from config import *
 from modelos.avaliacao import *
 from modelos.professor import *
@@ -24,7 +24,7 @@ def cadastroUsuario():
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
 
-@app.route('/excluirUsuario/<email>', methods=['DELETE'])
+@app.route('/excluirUsuario/<string:email>', methods=['DELETE'])
 @jwt_required()
 def excluirUsuario(email):
     try:
@@ -101,21 +101,15 @@ def cadastroAvaliacao():
         resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         dados = request.get_json(force=True)
         prof_id = getIdProf(dados['email'])
-
-        # transformar em lista
-        t = []
-        t.append(dados['turmas'])
-
-        # pegando os objetos Turma
         turmas = []
-        for i in t:
-            turmas.append(getTurmabyID(i)) 
-
+        for i in dados['turmas']:
+            t = getTurmabyID(i)
+            turmas.append(t)
         if cadastrarAvaliacao(desc= dados['descricao'], dataInicio= dados['dataInicio'], 
-        dataFim= dados['dataFim'], turmas= turmas, prof_id = prof_id):
+        dataFim= dados['dataFim'], turmas= turmas, prof_id = prof_id, arquivo = dados['arquivo']):
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
-            resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'backend'})
+            resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Erro ao cadastrar avaliação!'})
 
     except Exception as e:
         resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
@@ -127,16 +121,19 @@ def cadastroAvaliacao():
 @app.route("/salvar_arqs/<string:nome_av>/<turmas>", methods=['POST'])
 def salvar_arqs(nome_av: str, turmas):
     try:
-        resposta = jsonify({"resultado":"ok", "detalhes": "Avaliação cadastrada com sucesso!"})
+        resposta = jsonify({"resultado":"ok", "detalhes": "Arquivo salvo!"})
         file_val = request.files['arqs'] # pega o arquivo
         caminho_pasta = os.path.join(path, 'avaliacoes/'+ str(nome_av)) # definir o caminho da pasta da av
         if os.path.isdir(caminho_pasta) is False: # verifica se a pasta já não existe
             os.mkdir(caminho_pasta) # criar a pasta da avaliação
             caminho_arq = os.path.join(caminho_pasta, file_val.filename) # define o caminho do arquivo
             file_val.save(caminho_arq) # salvar arquivo
+            # cria a pasta da turma
+            turmas = turmas.split(',')
             for t in turmas: 
                 turma = getTurmabyID(t)
                 pasta_turma = os.path.join(caminho_pasta, str(turma.nome))
+                # cria as pastas dos alunos
                 if os.path.isdir(pasta_turma) is False:
                     os.mkdir(pasta_turma)
                     nome_alunos = getNomeAlunos(turma.alunos)
@@ -146,11 +143,15 @@ def salvar_arqs(nome_av: str, turmas):
         else:
             resposta = jsonify({"resultado":"erro", "detalhes": "A avaliação já está cadastrada!"})
     except Exception as e:
-        print(e)
         resposta = jsonify({"resultado":"erro", "detalhes": str(e)})
     resposta.headers.add("Access-Control-Allow-Origin", "*")
     return resposta
 
+'''@app.route('/gerar_pdf/<int: id_av>', methods=['GET'])
+@jwt_required()
+def gerar_pdf(id_av: int):
+    pass
+'''
 @app.route('/deleteAv/<string:email>/<int:av_id>', methods=['DELETE'])
 @jwt_required()
 def deleteAv(email, av_id):
@@ -158,13 +159,11 @@ def deleteAv(email, av_id):
         av = getAvaliacaobyID(av_id)
         caminho_pasta = os.path.join(path, 'avaliacoes/'+str(av.descricao))
         if deleteAvaliacao(av_id, email):
-            #os.rmdir(caminho_pasta, i)
-            shutil.rmtree(str(caminho_pasta))
+            shutil.rmtree(str(caminho_pasta)) #exclui a pasta da avaliação e todos os seus componentes
             resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
         else:
             resposta = jsonify({'Resultado': 'Erro', 'Detalhes': 'Avaliação não cadastrada!'})
     except Exception as e:
-        print(e)
         resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
 
     resposta.headers.add('Access-Control-Allow-Origin', '*')
@@ -185,6 +184,32 @@ def atualizar_av(email, id_av):
 
     resposta.headers.add('Access-Control-Allow-Origin', '*')
     return resposta
+
+# RESPOSTAS ==================================
+
+@app.route('/salvar_resposta/<string:nome_av>')
+def salvar_resposta(nome_av):
+    try: 
+        resposta = jsonify({'Resultado': 'ok', 'Detalhes': 'ok'})
+        dados = request.get_json(force=True)
+        prof = dados[0]
+        turma = dados[1]
+        nome_aluno = dados[2]
+        arq = request.files['arq']
+        caminho_pasta_aluno = os.path.join(path, 'avaliacoes/' + str(nome_av) + '/' + str(turma) + '/' + str(nome_aluno))
+        if os.path.isdir(caminho_pasta_aluno) is True:
+            caminho_arq = os.path.join(caminho_pasta_aluno, arq.filename)
+            arq.save(caminho_arq)
+    except Exception as e:
+        resposta = jsonify({'Resultado': 'Erro', 'Detalhes': str(e)})
+
+    resposta.headers.add('Access-Control-Allow-Origin', '*')
+    return resposta
+
+
+@app.route('/excluir_resposta')
+def excluir_resposta():
+    pass
 
 # TURMA ======================================
 
@@ -289,7 +314,23 @@ def render_av():
 def render_updateAv():
     return render_template('editarAv.html')
 
+@app.route('/submeter_resposta')
+def render_submeter_resposta():
+    return render_template('submeter_resposta.html')
+
 # CARREGAR INFOS ===========================================
+
+#@app.route('/get_arquivo', methods=['GET'])
+@app.route('/get_arquivo/<int:id_av>', methods=['GET'])
+def get_arquivo(id_av):
+    try:
+        av = getAvaliacaobyID(id_av)
+        caminho = os.path.dirname(os.path.abspath(__file__))
+        caminho += '/avaliacoes/'+ str(av.descricao) + '/' + str(av.arquivo)
+        return send_file(caminho, mimetype='application/pdf')
+
+    except Exception as e:
+        resposta = jsonify({"resultado": "erro", "detalhes": str(e)})
 
 @app.route('/listar/<string:classe>/<int:id>', methods=['GET'])
 @jwt_required()
@@ -315,7 +356,6 @@ def listar(classe, id):
             resposta.update({'Detalhes': lista_jsons})
         else:
             resposta.update({'Detalhes': 0})
-            print(resposta)
         resposta = jsonify(resposta)
 
     except Exception as e:

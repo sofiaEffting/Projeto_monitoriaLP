@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Submeter Resposta{% endblock %}
+{% block content %}
+<div class="container">
+	<h1>Submeter Resposta</h1>
+    <form onsubmit="return false" enctype="multipart/form-data" id="form_submissao"></form>
+    <div class="form-group mb-2">
+        <label for="campoEmailAluno">Nome completo:</label>
+        <input type="text" id="campoNomeAluno" class="form-control w-50" required autofocus
+            placeholder="Nome">
+    </div>
+    <div class="form-group mb-2">
+        <label for="campoArquivo">Arquivo:</label>
+        <input id="arqs" type="file" class="form-control w-50" name="arqs" accept=".txt, .pdf, .doc, .docx" multiple required>
+    </div>
+
+    <button id="btSubmeterAV" type="submit" class="btn btn-primary mt-2">Enviar</button>
+
+</form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static',filename='js/submeter.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static',filename='js/logout.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static',filename='js/op_turmas.js')}}" type="text/javascript"></script>
+{% endblock %}

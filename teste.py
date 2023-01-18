@@ -24,6 +24,16 @@ def add_resposta(nome_av: str, nome_aluno: str, arquivos):
     subprocess.run(['cd', f'{str(nome_av)}/{str(nome_aluno)}'])
     subprocess.run([''])
 
+def gerar_pdf():
+    subprocess.run(['ls'])
+    #subprocess.run(['dd', 'if=teste_txt.txt', 'of=teste_txt.pdf'])
+    os.system('lp -d PDF teste_txt.txt')
+    subprocess.run(['ls'])
+    subprocess.run(['cat', 'teste_txt.pdf'])
+
 '''add_av(nome_av, alunos)'''
+
+if __name__ == '__main__':
+    gerar_pdf()
 
 

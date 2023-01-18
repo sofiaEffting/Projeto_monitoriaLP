@@ -8,26 +8,31 @@ $(function(){
             var desc = $('#campoDescricao').val();
             var dataInicio = $('#campoDataInicio').val();
             var dataFim = $('#campoDataFim').val();
-            var turmas = $('.turmas:checked').val();
-            var arqs = new FormData($('#form_av')[0]);
-            console.log(arqs.values());
+            // turmas
+            var val = [];
+            $(':checkbox:checked').each(function(i){
+                val[i] = $(this).val();
+            });
+            // arquivo
+            var arqs = new FormData($('#form_av')[0]);        
+            var nome_arq = $('#arqs').val().substring(12);
 
             meuip = sessionStorage.getItem("meuip");
             jwt = sessionStorage.getItem('jwt');
-            var dados = JSON.stringify({descricao: desc, dataInicio: dataInicio, dataFim: dataFim, email: email, turmas: turmas});
+            var dados = JSON.stringify({descricao: desc, dataInicio: dataInicio, dataFim: dataFim, email: email, turmas: val, arquivo: nome_arq});
 
             $.ajax({
-                url: `http://${meuip}:5000/salvar_arqs/${desc}/${turmas}`,
+                url: `http://${meuip}:5000/salvar_arqs/${desc}/${val}`,
                 method: 'POST',
                 data: arqs, // dados serão enviados em formato normal, para upload da foto
                 contentType: false,
                 cache: false,
                 processData: false,
-                success: avCadastrada,
+                success: cadastrarAv,
                 error: anyError
             });
             
-            function avCadastrada (retorno) {
+            function cadastrarAv (retorno) {
                 if (retorno.resultado == 'ok') {
                     // chamada ao backend
                     $.ajax({
@@ -37,19 +42,10 @@ $(function(){
                         contentType: 'text/plain',
                         headers: {Authorization: 'Bearer ' + jwt},
                         data: dados,
-                        success: function () {
-                            Swal.fire({
-                                title: "Avaliação cadastrada com sucesso!",
-                                icon: "success",
-                                showConfirmButton: true
-                            });
-                            $('#campoDescricao').val('');
-                            $('#campoDataInicio').val('');
-                            $('#campoDataFim').val('');
-                        },
+                        success: avCadastrada,
                         error: function () {
                             Swal.fire({
-                                title: "Erro ao cadastrar avaliação!1", 
+                                title: "Erro ao cadastrar avaliação!", 
                                 icon: "error", 
                                 showConfirmButton: true
                             });   
@@ -57,26 +53,47 @@ $(function(){
                     });
                 } else {
                     Swal.fire({
-                        title: "Erro ao cadastrar avaliação!2", 
+                        title: "Erro ao cadastrar avaliação!", 
                         text: `${retorno.detalhes}`,
                         icon: "error", 
                         showConfirmButton: true
                     });              
                 }}
 
+            function avCadastrada () {
+                if (retorno.resultado == 'ok') {
+                    Swal.fire({
+                        title: "Avaliação cadastrada com sucesso!",
+                        icon: "success",
+                        showConfirmButton: true
+                    });
+                    $('#campoDescricao').val('');
+                    $('#campoDataInicio').val('');
+                    $('#campoDataFim').val('');
+                } else {
+                    Swal.fire({
+                        title: "Erro ao cadastrar avaliação!", 
+                        text: `${retorno.detalhes}`,
+                        icon: "error", 
+                        showConfirmButton: true
+                    });  
+                }
+            };    
+
             function anyError () {
                 Swal.fire({
-                    title: "Erro ao contatar back-end!3",
+                    title: "Erro ao contatar back-end!",
                     text: "Por favor, entre em contato com o administrador.",
-                    icon: "error",
+                    icon: "error"
                 });
             }
 
         } else {
-            Swal.fire({ title: "Você ainda não está logado!", 
+            Swal.fire({ 
+                title: "Você ainda não está logado!", 
                 icon: "error"
             });
-            setTimeout(render_index()), 1000;
+            setTimeout(render_index(), 1000);
         }
     });
 

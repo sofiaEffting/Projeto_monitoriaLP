@@ -3,7 +3,7 @@ currentdir = os.path.dirname(os.path.realpath(__file__)) # /home/friend/01-githu
 parentdir = os.path.dirname(currentdir) # /home/friend/01-github/dw2ed/fund/python/pacote/ex5
 sys.path.append(parentdir) 
 from config import *
-from modelos.turma import Turma
+from modelos.turma import Turma, getTurmabyID
 
 
 class Avaliacao(db.Model):
@@ -36,11 +36,15 @@ class Avaliacao(db.Model):
         return json
 
     def __str__(self) -> str:
-        turmas = ''
-        for i in self.turmas:
-            turmas += i.nome + ', '
-        return f'Id: {self.id} | Descrição: {self.descricao} | Data início: {self.dataInicio} | Data final: {self.dataFim} '\
-        f'| Turmas: {turmas.removesuffix(", ")} | Professor: {self.prof.nome} | Arquivo: {self.arquivo}'
+        try:
+            turmas = ''
+            for i in self.turmas:
+                turmas += i.nome + ', '
+            return f'Id: {self.id} | Descrição: {self.descricao} | Data início: {self.dataInicio} | Data final: {self.dataFim} '\
+            f'| Turmas: {turmas.removesuffix(", ")} | Professor: {self.prof.nome} | Arquivo: {self.arquivo}'
+        except Exception:
+            return None
+
 
 def getAvaliacao(desc: str):
     return Avaliacao.query.filter(Avaliacao.descricao == desc).first()
@@ -97,17 +101,17 @@ def deleteAvaliacao(id: int, email: str):
     except Exception:
         return False
 
-def cadastrarAvaliacao(desc: str, dataInicio: str, dataFim: str, turmas: list, prof_id: int, **kwargs):
+def cadastrarAvaliacao(desc: str, dataInicio: str, dataFim: str, turmas: list, prof_id: int, arquivo: str, **kwargs):
     try:
         if getAvaliacao(desc) is None:
-            av = Avaliacao(descricao = desc, dataInicio = dataInicio, dataFim = dataFim, turmas = turmas, prof_id = prof_id, **kwargs)
+            av = Avaliacao(descricao = desc, dataInicio = dataInicio, dataFim = dataFim, turmas= turmas, prof_id = prof_id, arquivo = arquivo, **kwargs)
             if av:
                 db.session.add(av)
                 db.session.commit()
             return True
         return False
     except Exception as e:
-        return e
+        return False
 
 tabela_associacao  = db.Table('tabela_associacao', db.metadata, 
     db.Column('turma_id', db.Integer, db.ForeignKey(Turma.id, ondelete='CASCADE'), primary_key=True),

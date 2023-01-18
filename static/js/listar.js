@@ -105,7 +105,7 @@ $(function () { // quando o documento estiver pronto/carregado
                     $('#corpoTabelaAvs').append(lin); 
                 }
             } else if(retorno.Resultado === 'ok' && retorno.Detalhes == 0) {
-                lin = `<tr><td> Nenhuma avaliação cadastrada! </td></tr>`;
+                lin = `<tr><td> Nenhuma avaliação cadastrada! </td><td></td></tr>`;
                 $('#corpoTabelaAvs').append(lin);
             } else {
                 Swal.fire({
